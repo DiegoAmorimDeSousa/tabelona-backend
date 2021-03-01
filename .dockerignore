@@ -1,0 +1,15 @@
+npm-debug.log
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+.vscode
+yarn.lock
+jest.config.js
+commitlint.config.js
+.eslintrc.json
+node_modules
+config/docker
+Jenkinsfile
+package-lock.json
