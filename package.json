@@ -1,25 +1,25 @@
 {
-  "name": "template-starter-js",
+  "name": "code7-partners-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "start": "node ./dist/server.js",
+    "dev": "nodemon ./src/server.js",
     "build": "sucrase ./src -d ./dist --transforms imports"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/luizandrends/template-starter-js.git"
+    "url": "git+https://github.com/code7-xlab/code7-partners-api.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/luizandrends/template-starter-js/issues"
+    "url": "https://github.com/code7-xlab/code7-partners-api/issues"
   },
-  "homepage": "https://github.com/luizandrends/template-starter-js#readme",
+  "homepage": "https://github.com/code7-xlab/code7-partners-api#readme",
   "dependencies": {
     "axios": "^0.20.0",
     "bcrypt": "^5.0.0",

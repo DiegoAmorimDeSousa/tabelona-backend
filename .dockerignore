@@ -10,6 +10,14 @@ jest.config.js
 commitlint.config.js
 .eslintrc.json
 node_modules
-config/docker
 Jenkinsfile
 package-lock.json
+src
+__tests__
+.editorconfig
+.eslintrc.js
+.eslintignore
+.prettierrc
+nodemon.json
+PATTERN.md
+README.md

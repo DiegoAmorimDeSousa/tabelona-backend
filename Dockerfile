@@ -1,6 +1,4 @@
-FROM node:lts
-RUN apt-get update
-RUN apt-get install ffmpeg -y
+FROM node:12.18.4-alpine
 
 # Create app directory
 RUN mkdir -p /app
@@ -11,10 +9,7 @@ COPY package.json /app
 RUN npm install
 
 # Bundle app source
-COPY src /app/src
-COPY config /app/config
-COPY blip-chat-widget /app/blip-chat-widget
-COPY bot-widget-html /app/bot-widget-html
+COPY . /app/.
 
-EXPOSE 3333
+EXPOSE 9030
 CMD npm run start

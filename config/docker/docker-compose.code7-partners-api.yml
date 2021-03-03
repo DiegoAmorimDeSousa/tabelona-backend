@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  code7-partners-api:
+    image: 'us.gcr.io/flexcontact/code7-partners-api:${TAG_VERSION}'
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    networks:
+      - xlab
+    ports:
+      - '9030:9030'
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 10s
+        max_attempts: 10
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '10'
+
+networks:
+  xlab:
+    external: false
+    ipam:
+      config:
+        - subnet: 10.1.1.0/24
