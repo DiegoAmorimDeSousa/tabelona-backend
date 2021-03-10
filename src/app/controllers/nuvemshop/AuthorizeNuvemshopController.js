@@ -1,4 +1,4 @@
-import { url_front, client_secret, client_id, authorize_app, api_url_nuvemshop } from '../../../utils/config';
+import { url_front, client_secret, client_id, authorize_app } from '../../../utils/config';
 import axios from 'axios';
 
 class AuthorizeNuvemshopController {
