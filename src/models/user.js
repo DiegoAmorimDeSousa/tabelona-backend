@@ -15,6 +15,7 @@ const UserSchema = new Schema({
     userIdBoteria: String,
     dashboardToken: String,
     companyId: String,
+    organizationId: String,
   }
 }, {
   timestamps: true
