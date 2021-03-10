@@ -2,7 +2,6 @@ import axios from 'axios';
 import { api_url, api_url_nuvemshop } from '../utils/config';
 
 async function nuvemshopService(user_id, access_token, idBot){
-
     const data = JSON.stringify({
       "src": `${api_url}/partner/bot/wid/${idBot}`,
       "event":"onload",
