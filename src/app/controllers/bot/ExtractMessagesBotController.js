@@ -1,22 +1,21 @@
-import extractMessagesBotService from '../../../services/extractMessagesBot.service';
+import { api_boteria } from '../../../utils/config';
 
 class ExtractMessagesBotController {
   async extract(request, response) {
     try {
-      const { filter, dashboardtoken, botid, tokenboteria } = request.headers;
+      const { filter, dashboardtoken, botid } = request.headers;
 
-      const start_date = new Date();
+      const end_date = new Date();
 
-      let end_date = new Date();
+      let start_date = new Date();
 
       if(filter === '7'){
-        end_date.setDate(end_date.getDate() - 7);
+        start_date.setDate(start_date.getDate() - 7);
       } else {
-        end_date.setDate(end_date.getMonth() - 1);
+        start_date.setDate(start_date.getDate() - 30);
       }
 
-      extractMessagesBotService(botid, dashboardtoken, start_date, end_date, tokenboteria);
-      return response.json('');
+      return response.json(`${api_boteria}/dashboard/collect-data-csv?bot_id=${botid}&token=${dashboardtoken}&start_date=${start_date}&end_date=${end_date}`);
     } catch (error) {
       return response.json(error);
     }

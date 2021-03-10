@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
 import createUserService from '../../../services/createUser.service';
 import boteriaService from '../../../services/boteria.service';
+import copyTemplateBotService from '../../../services/copyTemplateBot.service';
+import nuvemshopService from '../../../services/nuvemshop.service';
 import userSchema from '../../../models/user';
 
 class CreateUserController {
@@ -38,6 +40,17 @@ class CreateUserController {
         const userEmail = await userSchema.find({"email": email});
 
         if(userEmail.length === 0){
+            const copyTemplate = await copyTemplateBotService(createUserBoteria.companyId, createUserBoteria.organizationId, companyName);
+
+            let botPublished;
+
+            if(copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === ''){
+              botPublished = 1
+            } else{
+              botPublished = copyTemplate._id;
+            }
+
+            await nuvemshopService(userIdStore, accessToken, botPublished);
 
             const user = {
               name:  name,
@@ -47,11 +60,12 @@ class CreateUserController {
               userIdStore: userIdStore,
               accessToken: accessToken,
               password: hash,
-              botPublish: 1,
+              botPublish: botPublished,
               boteria: {
                 userIdBoteria: createUserBoteria.userId,
                 dashboardToken: createUserBoteria.dashboardToken,
                 companyId: createUserBoteria.companyId,
+                organizationId: createUserBoteria.organizationId
               }
             };
 
@@ -60,17 +74,17 @@ class CreateUserController {
           return response.status(200).send({
             'result': 'success',
             'message': 'Usuário cadastrado com sucesso',
-            'user': user
+            'user': user,
+            'status': 200
           });
         }
           return response.status(200).send({
             'result': 'error',
             'message': 'Usuário já existente, insira outro email',
-            'user': userEmail
+            'user': userEmail,
+            'status': 422
           });
-      }
-
-      if(createUserBoteria.status === 422){
+      } else if(createUserBoteria.status === 422){
         return response.status(200).send(createUserBoteria);
       }
     } catch (error) {

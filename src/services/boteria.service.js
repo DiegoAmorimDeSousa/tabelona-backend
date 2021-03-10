@@ -7,8 +7,6 @@ async function boteriaService(user) {
     user
   }
 
-  console.log(api_boteria);
-
   const createUser = {};
 
   await axios.post(`${api_boteria}/auth/sign-up`, objectUserBoteria)
@@ -18,6 +16,7 @@ async function boteriaService(user) {
     createUser.dashboardToken = response.data.dashboardToken;
     createUser.companyId = response.data.companyId;
     createUser.userId = response.data.userId;
+    createUser.organizationId = response.data.organizationId;
   }).catch(err => {
     createUser.status = 422;
     createUser.message = 'error creates user';

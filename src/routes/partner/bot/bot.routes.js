@@ -8,6 +8,8 @@ import countMessagesController from '../../../app/controllers/bot/CountMessagesB
 import getSettingsBotController from '../../../app/controllers/bot/GetSettingsBotController';
 import extractMessagesBotController from '../../../app/controllers/bot/ExtractMessagesBotController';
 import updateSettingsBotController from '../../../app/controllers/bot/UpdateSettingsBotController';
+import getBotPublishController from '../../../app/controllers/bot/GetBotPublishController';
+import coutDataController from '../../../app/controllers/bot/CountDataController';
 
 const botRouter = Router();
 
@@ -19,5 +21,7 @@ botRouter.get('/count-messages', countMessagesController.count);
 botRouter.get('/get/settings', getSettingsBotController.getSettings);
 botRouter.get('/extract/messages', extractMessagesBotController.extract);
 botRouter.post('/update/settings', updateSettingsBotController.update);
+botRouter.get('/get/publish', getBotPublishController.getPublish);
+botRouter.get('/count/data', coutDataController.count);
 
 export default botRouter;

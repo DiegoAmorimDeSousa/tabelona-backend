@@ -1,5 +1,7 @@
 import loginBoteriaService from '../../../services/loginBoteria.service';
 import createUserService from '../../../services/createUser.service';
+import copyTemplateBotService from '../../../services/copyTemplateBot.service';
+import nuvemshopService from '../../../services/nuvemshop.service';
 import bcrypt from 'bcrypt';
 import userSchema from '../../../models/user';
 
@@ -31,6 +33,18 @@ class BoteriaLoginUserController {
 
         if(userEmail.length === 0){
 
+            const copyTemplate = await copyTemplateBotService(loginUserBoteria.companyId, loginUserBoteria.organizationId, companyName);
+
+            let botPublished;
+
+            if(copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === ''){
+              botPublished = 1
+            } else{
+              botPublished = copyTemplate._id;
+            }
+
+            await nuvemshopService(userIdStore, accessToken, botPublished);
+
             const user = {
               name:  name,
               email: email,
@@ -39,11 +53,12 @@ class BoteriaLoginUserController {
               userIdStore: userIdStore,
               accessToken: accessToken,
               password: hash,
-              botPublish: 1,
+              botPublish: botPublished,
               boteria: {
                 userIdBoteria: loginUserBoteria.userId,
                 dashboardToken: loginUserBoteria.dashboardToken,
                 companyId: loginUserBoteria.companyId,
+                organizationId: loginUserBoteria.organizationId
               }
             };
 

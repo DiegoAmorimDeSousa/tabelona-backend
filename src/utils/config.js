@@ -20,3 +20,6 @@ export const api_url_nuvemshop = process.env.API_URL_NUVEMSHOP;
 export const list_bot = process.env.LIST_BOTS;
 export const api_boteria = process.env.API_BOTERIA;
 export const api_url = process.env.API_URL;
+export const api_boteria_copy_template = process.env.API_BOTERIA_COPY_TEMPLATE;
+export const template_id = process.env.ID_TEMPLATE_NUVEMSHOP;
+export const key_boteria = process.env.KEY_BOTERIA;

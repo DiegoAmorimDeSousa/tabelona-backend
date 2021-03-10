@@ -1,25 +1,17 @@
 import userSchema from '../../../models/user';
-import moment from 'moment';
-import listBotService from '../../../services/listBot.service';
-
+import countMessagesUserBoteriaService from '../../../services/coutMessagesUserBoteria.service';
 class CountMessagesBotController{
   async count(request, response){
     try {
-      const { email, token } = request.headers;
-
-      const listBot = await listBotService(token);
-
-      console.log(listBot[0]);
+      const { email } = request.headers;
 
       const userEmail = await userSchema.find(
         {email: email},
       );
 
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json',
-    // }
-      return response.json('teste');
+      const countMessages =  await countMessagesUserBoteriaService(userEmail[0].boteria.companyId, userEmail[0].boteria.dashboardToken);
+
+      return response.json(countMessages);
     } catch (error) {
       return response.json(error);
     }
