@@ -18,6 +18,7 @@ async function loginBoteria(email, password){
     loginUser.dashboardToken = result.data.user.dashboard_token;
     loginUser.companyId = result.data.user.companyId;
     loginUser.userId = result.data.user._id;
+    loginUser.organizationId = result.data.user.organizationIds[0];
     loginUser.tokenBoteria = result.data.token;
   })
   .catch(() => loginUser.status = 422);
