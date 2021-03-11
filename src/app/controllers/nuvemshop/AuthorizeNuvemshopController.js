@@ -4,28 +4,17 @@ import axios from 'axios';
 class AuthorizeNuvemshopController {
   async authorize(request, response){
     try {
-      // axios.post(authorize_app, {
-      //   client_id: client_id,
-      //   client_secret: client_secret,
-      //   grant_type:"authorization_code",
-      //   code: request.query.code
-      //   }).then(result => {
-      //     response.redirect(`https://${url_front}/signup/${result.data.user_id}/${result.data.access_token}`);
-      //   }).catch(err => {
-      //     return response.json(err);
-      //   })
-
-      // CLIENT_ID E CLIENT_SECRET SEM ENV ATÉ O APP DE TESTES FOR PARA LOJA
       axios.post(authorize_app, {
-        client_id: 2133,
-        client_secret: 'ULFLm8kDQkCnp8U95S4PEmKLcYnvrZUPdNuDFmNWvOASguZp',
+        client_id: client_id,
+        client_secret: client_secret,
         grant_type:"authorization_code",
         code: request.query.code
         }).then(result => {
           response.redirect(`https://${url_front}/signup/${result.data.user_id}/${result.data.access_token}`);
         }).catch(err => {
           return response.json(err);
-        })
+        });
+
     } catch (error) {
       return response.json(error);
     }
