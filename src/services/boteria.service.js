@@ -20,7 +20,7 @@ async function boteriaService(user) {
   }).catch(err => {
     createUser.status = 422;
     createUser.message = 'error creates user';
-    createUser.email = err.response.data.errors.keyValue.email;
+    createUser.error = err.response.data.errors;
   });
 
   return createUser;
