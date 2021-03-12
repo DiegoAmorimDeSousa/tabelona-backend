@@ -5,8 +5,8 @@ class AuthorizeNuvemshopController {
   async authorize(request, response){
     try {
       axios.post(authorize_app, {
-        client_id: 2133,
-        client_secret: 'ULFLm8kDQkCnp8U95S4PEmKLcYnvrZUPdNuDFmNWvOASguZp',
+        client_id: client_id,
+        client_secret: client_secret,
         grant_type:"authorization_code",
         code: request.query.code
         }).then(result => {
