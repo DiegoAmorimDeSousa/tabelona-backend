@@ -12,7 +12,6 @@ async function nuvemshopService(user_id, access_token, idBot){
       method: 'post',
       url: `${api_url_nuvemshop}/v1/${user_id}/scripts`,
       headers: {
-        'User-Agent': 'Teste_Code7 (diego.amorim@code7.com)',
         'Authentication': `bearer ${access_token}`,
         'Content-Type': 'application/json'
       },
@@ -24,6 +23,7 @@ async function nuvemshopService(user_id, access_token, idBot){
       return JSON.stringify(responsePost.data);
     })
     .catch(function (error) {
+      console.log(error.response.data);
       return error;
     });
 
