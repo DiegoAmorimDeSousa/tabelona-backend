@@ -2,8 +2,9 @@ import axios from 'axios';
 import { api_url, api_url_nuvemshop } from '../utils/config';
 
 async function nuvemshopService(user_id, access_token, idBot){
+
     const data = JSON.stringify({
-      "src": `${api_url}/partner/bot/wid/${idBot}`,
+      "src": `https://${api_url}/partner/bot/wid/${idBot}`,
       "event":"onload",
       "where":"store"
     });
@@ -20,10 +21,10 @@ async function nuvemshopService(user_id, access_token, idBot){
 
     const publish = await axios(config)
     .then(function (responsePost) {
+      console.log(4, responsePost.data);
       return JSON.stringify(responsePost.data);
     })
     .catch(function (error) {
-      console.log(error.response.data);
       return error;
     });
 
