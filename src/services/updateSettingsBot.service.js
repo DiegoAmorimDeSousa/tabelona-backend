@@ -11,11 +11,7 @@ async function updateSettingsBotService(settings, botid, token){
     'Content-Type': 'application/json',
     'Authorization': 'Bearer' + ' ' + token,
   }}
-  ).then(result => {
-    console.log(result);
-  }).catch(error => {
-    console.log(error);
-  })
+  );
 }
 
 export default updateSettingsBotService;
