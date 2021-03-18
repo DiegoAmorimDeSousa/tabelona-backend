@@ -40,11 +40,12 @@ class CreateUserController {
         const userEmail = await userSchema.find({"email": email});
 
         if(userEmail.length === 0){
+
             const copyTemplate = await copyTemplateBotService(createUserBoteria.companyId, createUserBoteria.organizationId, companyName);
 
             let botPublished;
 
-            if(copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === ''){
+            if(copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined){
               botPublished = 1
             } else{
               botPublished = copyTemplate._id;

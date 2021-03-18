@@ -7,7 +7,7 @@ function createUserService(user){
       .then(() => {
         console.log('user created');
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log('ERROR CREATED: ', err));
 }
 
 export default createUserService;
