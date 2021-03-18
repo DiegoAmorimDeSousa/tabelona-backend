@@ -21,7 +21,6 @@ async function nuvemshopService(user_id, access_token, idBot){
 
     const publish = await axios(config)
     .then(function (responsePost) {
-      console.log(4, responsePost.data);
       return JSON.stringify(responsePost.data);
     })
     .catch(function (error) {
