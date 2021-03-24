@@ -31,6 +31,7 @@ class CreateUserController {
         phone: phone,
         companyName: companyName,
         password: password,
+        source: 'LP_nuvemshop'
       };
 
       // AINDA É PRECISO CRIAR CONTA NO OMNI
