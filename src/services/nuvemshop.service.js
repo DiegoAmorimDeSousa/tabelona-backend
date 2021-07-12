@@ -21,11 +21,11 @@ async function nuvemshopService(user_id, access_token, idBot) {
 
   const publish = await axios(config)
     .then(function (responsePost) {
-      console.log('CAIU AQUI THEN NUVEMSHOP')
+      console.log('CAIU AQUI THEN NUVEMSHOP.')
       return JSON.stringify(responsePost.data);
     })
     .catch(function (error) {
-      consol.log('CAIU AQUI CATCH NUVEMSHOP')
+      consol.log('CAIU AQUI CATCH NUVEMSHOP.')
       return error;
     });
 
