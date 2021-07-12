@@ -45,10 +45,10 @@ class App {
       useUnifiedTopology: true,
       useFindAndModify: false
     })
-    .then(() => {
-      console.log('MongoDB Conected');
-    })
-    .catch(err => console.log(err));
+      .then(() => {
+        console.log('MongoDB Conected');
+      })
+      .catch(err => console.log(err));
   }
 
   middlewares() {
@@ -66,7 +66,7 @@ class App {
       for (let i = 0; i < urlSplice.length; i++) {
         const element = urlSplice[i];
 
-        if(element === 'boteria'){
+        if (element === 'boteria') {
           boteriaUrlExistent = true;
         }
       }
@@ -74,15 +74,15 @@ class App {
       const authHeader = req.headers.authorization;
       const storeCode = req.query.code;
 
-      if(url === '/partner/user/create' || url === '/partner/user/login'){
+      if (url === '/partner/user/create' || url === '/partner/user/login' || url === '/partner/nuvemshop/customers-data-request' || url === '/partner/nuvemshop/customers-redact' || url === '/partner/nuvemshop/store-redact') {
         next();
-      } else if(boteriaUrlExistent){
+      } else if (boteriaUrlExistent) {
         next();
       } else {
-        if(storeCode){
+        if (storeCode) {
           next();
         } else {
-          if (!authHeader){
+          if (!authHeader) {
             return res.status(401).send({ error: 'No token provided' });
           } else {
             const parts = authHeader.split(' ');
@@ -93,7 +93,7 @@ class App {
 
             if (scheme.search(/Bearer/i) === -1) return res.status(401).send({ error: 'Token malformatted' });
 
-            if(token === 'null') return res.status(401).send({error: 'token null'});
+            if (token === 'null') return res.status(401).send({ error: 'token null' });
 
             jwt.verify(token, (secret ? secret : ''), (err, decod) => {
               if (err) return res.status(401).send({ error: 'Token Invalido' });
