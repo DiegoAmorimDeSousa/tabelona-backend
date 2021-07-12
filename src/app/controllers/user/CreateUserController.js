@@ -83,7 +83,7 @@ class CreateUserController {
         }
         return response.status(200).send({
           'result': 'error',
-          'message': 'Usuário já existente, insira outro email',
+          'message': 'Usuário já existente, insira outro email.',
           'user': userEmail,
           'status': 422
         });
