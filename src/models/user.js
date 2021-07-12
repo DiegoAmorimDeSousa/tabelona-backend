@@ -16,7 +16,8 @@ const UserSchema = new Schema({
     dashboardToken: String,
     companyId: String,
     organizationId: String,
-  }
+  },
+  closeInitialGif: Boolean
 }, {
   timestamps: true
 });

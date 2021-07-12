@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import userSchema from '../../../models/user';
 
 class BoteriaLoginUserController {
-  async login(request, response){
+  async login(request, response) {
     try {
       const {
         name,
@@ -16,6 +16,7 @@ class BoteriaLoginUserController {
         userIdStore,
         accessToken,
         password,
+        tokenReCaptcha
       } = request.body;
 
       const salt = bcrypt.genSaltSync(10);
@@ -25,42 +26,43 @@ class BoteriaLoginUserController {
       const hash = bcrypt.hashSync(hashPassword, salt);
 
       // AINDA É PRECISO CRIAR CONTA NO OMNI
-      const loginUserBoteria = await loginBoteriaService(email, password);
+      const loginUserBoteria = await loginBoteriaService(email, password, tokenReCaptcha);
 
-      if(loginUserBoteria.status === 200){
+      if (loginUserBoteria.status === 200) {
 
-        const userEmail = await userSchema.find({"email": email});
+        const userEmail = await userSchema.find({ "email": email });
 
-        if(userEmail.length === 0){
+        if (userEmail.length === 0) {
 
-            const copyTemplate = await copyTemplateBotService(loginUserBoteria.companyId, loginUserBoteria.organizationId, companyName);
+          const copyTemplate = await copyTemplateBotService(loginUserBoteria.companyId, loginUserBoteria.organizationId, companyName);
 
-            let botPublished;
+          let botPublished;
 
-            if(copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === ''){
-              botPublished = 1
-            } else{
-              botPublished = copyTemplate._id;
-            }
+          if (copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '') {
+            botPublished = 1
+          } else {
+            botPublished = copyTemplate._id;
+          }
 
-            await nuvemshopService(userIdStore, accessToken, botPublished);
+          await nuvemshopService(userIdStore, accessToken, botPublished);
 
-            const user = {
-              name:  name,
-              email: email,
-              phone: phone,
-              companyName: companyName,
-              userIdStore: userIdStore,
-              accessToken: accessToken,
-              password: hash,
-              botPublish: botPublished,
-              boteria: {
-                userIdBoteria: loginUserBoteria.userId,
-                dashboardToken: loginUserBoteria.dashboardToken,
-                companyId: loginUserBoteria.companyId,
-                organizationId: loginUserBoteria.organizationId
-              }
-            };
+          const user = {
+            name: name,
+            email: email,
+            phone: phone,
+            companyName: companyName,
+            userIdStore: userIdStore,
+            accessToken: accessToken,
+            password: hash,
+            botPublish: botPublished,
+            boteria: {
+              userIdBoteria: loginUserBoteria.userId,
+              dashboardToken: loginUserBoteria.dashboardToken,
+              companyId: loginUserBoteria.companyId,
+              organizationId: loginUserBoteria.organizationId
+            },
+            closeInitialGif: false
+          };
 
           createUserService(user);
 
@@ -70,11 +72,11 @@ class BoteriaLoginUserController {
             'user': user
           });
         }
-          return response.status(200).send({
-            'result': 'error',
-            'message': 'Usuário já existente, insira outro email',
-            'user': userEmail
-          });
+        return response.status(200).send({
+          'result': 'error',
+          'message': 'Usuário já existente, insira outro email',
+          'user': userEmail
+        });
       } else {
         return response.status(200).send({
           'result': 'error',
