@@ -43,7 +43,7 @@ class CreateUserController {
 
                 if (userEmail.length === 0) {
 
-                    const copyTemplate = await copyTemplateBotService(createUserBoteria.companyId, createUserBoteria.organizationId, companyName);
+                    const copyTemplate = await copyTemplateBotService(createUserBoteria.companyId, createUserBoteria.organizationId, companyName, createUserBoteria.userId);
                     let botPublished;
 
                     if (copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {

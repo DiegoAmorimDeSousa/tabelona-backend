@@ -62,6 +62,7 @@ class App {
       const urlSplice = url.split('/');
 
       let boteriaUrlExistent = false;
+      let partnerStore = false;
 
       for (let i = 0; i < urlSplice.length; i++) {
         const element = urlSplice[i];
@@ -71,12 +72,18 @@ class App {
         }
       }
 
+      if (urlSplice[2] === 'bot' && urlSplice[3] === 'wid') {
+        partnerStore = true;
+      }
+
       const authHeader = req.headers.authorization;
       const storeCode = req.query.code;
 
       if (url === '/partner/user/create' || url === '/partner/user/login' || url === '/partner/nuvemshop/customers-data-request' || url === '/partner/nuvemshop/customers-redact' || url === '/partner/nuvemshop/store-redact') {
         next();
       } else if (boteriaUrlExistent) {
+        next();
+      } else if (partnerStore) {
         next();
       } else {
         if (storeCode) {
