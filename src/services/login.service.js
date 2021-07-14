@@ -14,6 +14,7 @@ async function loginService(email, password, tokenReCaptcha, res) {
           const loginUserBoteriaService = await loginBoteriaService(email, password, tokenReCaptcha);
 
           if (loginUserBoteriaService.status === 422) {
+            obj.status = 422
             obj.message = 'Antes de entrar na plataforma confirme sua conta na boteria no e-mail que você recebeu!';
           } else {
 
@@ -24,10 +25,12 @@ async function loginService(email, password, tokenReCaptcha, res) {
 
           }
         } else {
+          obj.status = 422
           obj.message = 'Senha incorreta';
           obj.result = 'error';
         }
       } else {
+        obj.status = 422
         obj.message = 'Usuário não encontrado';
         obj.result = 'error';
       }

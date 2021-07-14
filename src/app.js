@@ -98,7 +98,6 @@ class App {
               return res.status(401).send({ error: 'Token Error' });
             }
 
-
             const [scheme, token] = parts;
 
             if (scheme.search(/Bearer/i) === -1) {
