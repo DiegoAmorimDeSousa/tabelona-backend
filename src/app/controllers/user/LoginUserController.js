@@ -4,7 +4,9 @@ class LoginUserController {
   async login(request, response) {
     const { email, password, tokenReCaptcha } = request.body;
 
-    loginService(email, password, tokenReCaptcha, response);
+    const login = await loginService(email, password, tokenReCaptcha);
+
+    return response.json(login);
   }
 }
 

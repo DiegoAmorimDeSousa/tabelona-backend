@@ -79,7 +79,7 @@ class App {
       const authHeader = req.headers.authorization;
       const storeCode = req.query.code;
 
-      if (url === '/partner/user/create' || url === '/partner/user/login' || url === '/partner/nuvemshop/customers-data-request' || url === '/partner/nuvemshop/customers-redact' || url === '/partner/nuvemshop/store-redact') {
+      if (url == '/partner/user/create' || url == '/partner/user/login' || url == '/partner/nuvemshop/customers-data-request' || url == '/partner/nuvemshop/customers-redact' || url == '/partner/nuvemshop/store-redact') {
         next();
       } else if (boteriaUrlExistent) {
         next();
@@ -94,13 +94,20 @@ class App {
           } else {
             const parts = authHeader.split(' ');
 
-            if (!(parts.length === 2)) return res.status(401).send({ error: 'Token Error' });
+            if (!(parts.length === 2)) {
+              return res.status(401).send({ error: 'Token Error' });
+            }
+
 
             const [scheme, token] = parts;
 
-            if (scheme.search(/Bearer/i) === -1) return res.status(401).send({ error: 'Token malformatted' });
+            if (scheme.search(/Bearer/i) === -1) {
+              return res.status(401).send({ error: 'Token malformatted' });
+            }
 
-            if (token === 'null') return res.status(401).send({ error: 'token null' });
+            if (token === 'null') {
+              return res.status(401).send({ error: 'token null' });
+            }
 
             jwt.verify(token, (secret ? secret : ''), (err, decod) => {
               if (err) return res.status(401).send({ error: 'Token Invalido' });
