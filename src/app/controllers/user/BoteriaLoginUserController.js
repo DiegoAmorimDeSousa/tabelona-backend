@@ -69,7 +69,8 @@ class BoteriaLoginUserController {
           return response.status(200).send({
             'result': 'success',
             'message': 'Usuário cadastrado com sucesso',
-            'user': user
+            'user': user,
+            'token': loginUserBoteria.tokenBoteria
           });
         }
         return response.status(200).send({

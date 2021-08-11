@@ -22,7 +22,7 @@ async function loginBoteria(email, password, tokenReCaptcha) {
       loginUser.organizationId = result.data.user.organizationIds[0];
       loginUser.tokenBoteria = result.data.token;
     })
-    .catch(() => {
+    .catch((err) => {
       loginUser.status = 422
     });
 
