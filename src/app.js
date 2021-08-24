@@ -79,7 +79,7 @@ class App {
       const authHeader = req.headers.authorization;
       const storeCode = req.query.code;
 
-      if (url == '/partner/user/create' || url == '/partner/user/login' || url == '/partner/nuvemshop/customers-data-request' || url == '/partner/nuvemshop/customers-redact' || url == '/partner/nuvemshop/store-redact') {
+      if (url == '/partner/user/create' || url == '/partner/user/login' || url == '/partner/nuvemshop/customers-data-request' || url == '/partner/nuvemshop/customers-redact' || url == '/partner/nuvemshop/store-redact' || url == '/partner/rd/code') {
         next();
       } else if (boteriaUrlExistent) {
         next();
