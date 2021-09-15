@@ -41,9 +41,9 @@ class BuildWidController {
 
         `;
 
-    fs.writeFile(appRoot + '/wid.js', file, () => {
+      fs.writeFile(appRoot + '/wid.js', file, () => {
         return response.status(200).sendFile(appRoot + '/wid.js');
-    });
+      });
 
       return response.status(200);
     } catch (error) {

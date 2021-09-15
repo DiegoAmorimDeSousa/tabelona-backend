@@ -7,6 +7,7 @@ import boteriaLoginUserController from '../../../app/controllers/user/BoteriaLog
 import recoverPasswordBoteriaUserController from '../../../app/controllers/user/RecoverPasswordBoteriaUserController';
 import closeInitialGifController from '../../../app/controllers/user/CloseInitialGifController';
 import getCloseInitialGifController from '../../../app/controllers/user/GetCloseInitialGifController';
+import userDataController from '../../../app/controllers/user/userDataController';
 
 const userRouter = Router();
 
@@ -17,5 +18,6 @@ userRouter.post('/boteria/login', boteriaLoginUserController.login);
 userRouter.post('/boteria/recover-password', recoverPasswordBoteriaUserController.recoverPassword);
 userRouter.post('/update/gif', closeInitialGifController.close);
 userRouter.get('/get/close-gif', getCloseInitialGifController.getGif);
+userRouter.get('/', userDataController.getUser);
 
 export default userRouter;

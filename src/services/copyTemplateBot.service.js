@@ -1,10 +1,10 @@
-import { api_boteria_copy_template, template_id, api_boteria, key_boteria } from '../utils/config';
+import { api_boteria_copy_template, template_id_nuvemshop, template_id_rd, api_boteria, key_boteria } from '../utils/config';
 import axios from 'axios';
 
-async function copyTemplateBotService(companyId, organizationId, companyName, userId) {
+async function copyTemplateBotService(companyId, organizationId, companyName, userId, origin) {
 
   const copyTemplate = await axios.post(api_boteria_copy_template, {
-    "templateBotId": template_id,
+    "templateBotId": origin === 'nuvemshop' ? template_id_nuvemshop : template_id_rd,
     "organizationId": organizationId,
     "companyId": companyId,
     "customValues": {
@@ -20,7 +20,7 @@ async function copyTemplateBotService(companyId, organizationId, companyName, us
     return response.data;
 
   }).catch(error => {
-    return error.data;
+    return error.response.data;
   })
 
   return copyTemplate;

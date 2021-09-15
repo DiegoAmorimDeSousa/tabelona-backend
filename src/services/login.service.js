@@ -4,7 +4,6 @@ import loginBoteriaService from './loginBoteria.service';
 import bcrypt from 'bcrypt';
 
 async function loginService(email, password, tokenReCaptcha, res) {
-
   const obj = {};
 
   await User.findOne({ email: email })
@@ -14,7 +13,8 @@ async function loginService(email, password, tokenReCaptcha, res) {
           const loginUserBoteriaService = await loginBoteriaService(email, password, tokenReCaptcha);
 
           if (loginUserBoteriaService.status === 422) {
-            obj.status = 422
+            obj.status = 422;
+            obj.result = 'error';
             obj.message = 'Antes de entrar na plataforma confirme sua conta na boteria no e-mail que você recebeu!';
           } else {
 

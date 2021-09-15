@@ -3,18 +3,18 @@ import getScriptNuvemshopService from '../../../services/getScriptNuvemshop.serv
 import deleteScriptNuvemshopService from '../../../services/deleteScriptNuvemshop.service';
 
 class DeleteBotController {
-  async delete(request, response){
+  async delete(request, response) {
     try {
       const { email } = request.body;
 
       const userEmail = await userSchema.findOneAndUpdate(
-        {email: email},
-        {botPublish: 1}
+        { email: email },
+        { botPublish: 1 }
       );
 
       const getScript = await getScriptNuvemshopService(userEmail.userIdStore, userEmail.accessToken);
 
-      if(getScript.length !== 0){
+      if (getScript.length !== 0) {
         const deleteScript = await deleteScriptNuvemshopService(userEmail.userIdStore, userEmail.accessToken, getScript);
         return response.json(deleteScript);
       }

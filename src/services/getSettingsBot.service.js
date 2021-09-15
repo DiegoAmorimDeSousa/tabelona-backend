@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { list_bot } from '../utils/config';
 
-async function getSettings(token, bot){
+async function getSettings(token, bot) {
 
   const listBot = await axios.get(`${list_bot}/${bot}`, {
     headers: {

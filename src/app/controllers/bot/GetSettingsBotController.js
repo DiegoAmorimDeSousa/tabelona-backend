@@ -1,11 +1,11 @@
 import getSettingsService from '../../../services/getSettingsBot.service';
 
-class GetSettingsBotController{
-  async getSettings(request, response){
+class GetSettingsBotController {
+  async getSettings(request, response) {
     try {
       const { botid, token } = request.headers;
 
-      const getSettings = await getSettingsService(token ,botid);
+      const getSettings = await getSettingsService(token, botid);
 
       return response.json(getSettings.channels);
     } catch (error) {

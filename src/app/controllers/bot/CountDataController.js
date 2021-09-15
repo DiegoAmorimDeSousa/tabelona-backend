@@ -2,10 +2,10 @@ import userSchema from '../../../models/user';
 import countDataService from '../../../services/countData.service';
 
 class CountDataController {
-  async count(request, response){
+  async count(request, response) {
     const { email } = request.headers;
 
-    const userEmail = await userSchema.find({"email": email});
+    const userEmail = await userSchema.find({ "email": email });
 
     const end_date = new Date();
 

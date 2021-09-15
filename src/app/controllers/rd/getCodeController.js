@@ -5,16 +5,14 @@ class getCodeController {
 
         const { code } = request.query;
 
-        console.log(request);
-
         axios.post(process.env.URL_RD_AUTH, {
             "client_id": process.env.CLIENT_ID_RD,
             "client_secret": process.env.CLIENT_SECRET_RD,
             "grant_type": "authorization_code",
             "code": code
         }).then(result => {
-            response.redirect(`${process.env.URL_FRONT}/signup/rd/${result.data.refresh_token}/${result.data.access_token}`);
-        }).catch(err => console.log(err))
+            response.redirect(`${process.env.URL_FRONT}/signup/rd/${result.data.refresh_token}/${result.data.access_token}/${code}`);
+        }).catch(() => { });
 
         return response.status(200);
     }

@@ -10,7 +10,10 @@ const UserSchema = new Schema({
   password: String,
   accessToken: String,
   userIdStore: String,
+  refreshToken_rd: String,
   botPublish: String,
+  origin: String,
+  code_rd: String,
   boteria: {
     userIdBoteria: String,
     dashboardToken: String,

@@ -8,33 +8,24 @@ import userSchema from '../../../models/user';
 class BoteriaLoginUserController {
   async login(request, response) {
     try {
-      const {
-        name,
-        email,
-        phone,
-        companyName,
-        userIdStore,
-        accessToken,
-        password,
-        tokenReCaptcha
-      } = request.body;
+      const { user } = request.body;
 
       const salt = bcrypt.genSaltSync(10);
 
-      const hashPassword = password;
+      const hashPassword = user.password;
 
       const hash = bcrypt.hashSync(hashPassword, salt);
 
       // AINDA É PRECISO CRIAR CONTA NO OMNI
-      const loginUserBoteria = await loginBoteriaService(email, password, tokenReCaptcha);
+      const loginUserBoteria = await loginBoteriaService(user.email, user.password, user.tokenReCaptcha);
 
       if (loginUserBoteria.status === 200) {
 
-        const userEmail = await userSchema.find({ "email": email });
+        const userEmail = await userSchema.find({ "email": user.email });
 
         if (userEmail.length === 0) {
 
-          const copyTemplate = await copyTemplateBotService(loginUserBoteria.companyId, loginUserBoteria.organizationId, companyName);
+          const copyTemplate = await copyTemplateBotService(loginUserBoteria.companyId, loginUserBoteria.organizationId, user.companyName, loginUserBoteria.userId);
 
           let botPublished;
 
@@ -44,17 +35,20 @@ class BoteriaLoginUserController {
             botPublished = copyTemplate._id;
           }
 
-          await nuvemshopService(userIdStore, accessToken, botPublished);
+          if (user.origin === 'nuvemshop') {
+            await nuvemshopService(user.userIdStore, user.accessToken, botPublished);
+          }
 
-          const user = {
-            name: name,
-            email: email,
-            phone: phone,
-            companyName: companyName,
-            userIdStore: userIdStore,
-            accessToken: accessToken,
+          const userSave = {
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            companyName: user.companyName,
+            accessToken: user.accessToken,
             password: hash,
             botPublish: botPublished,
+            origin: user.origin,
+            code_rd: user.code,
             boteria: {
               userIdBoteria: loginUserBoteria.userId,
               dashboardToken: loginUserBoteria.dashboardToken,
@@ -64,12 +58,14 @@ class BoteriaLoginUserController {
             closeInitialGif: false
           };
 
-          createUserService(user);
+          user.origin === 'rd' ? userSave.refreshToken_rd = user.refreshToken : userSave.userIdStore = user.userIdStore;
+
+          createUserService(userSave);
 
           return response.status(200).send({
             'result': 'success',
             'message': 'Usuário cadastrado com sucesso',
-            'user': user,
+            'user': userSave,
             'token': loginUserBoteria.tokenBoteria
           });
         }

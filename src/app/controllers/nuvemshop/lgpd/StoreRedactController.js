@@ -11,8 +11,6 @@ class StoreRedactController {
             }
             ,
             { 'userIdStore': '', 'accessToken': '' }, { new: true })
-            .then(result => console.log(result))
-            .catch(err => console.log(err));
 
         return response.status(200).json({
             message: "success"

@@ -9,77 +9,85 @@ class CreateUserController {
     async create(request, response) {
         try {
 
-            const {
-                name,
-                email,
-                phone,
-                companyName,
-                userIdStore,
-                accessToken,
-                password,
-                tokenReCaptcha
-            } = request.body;
+            const { user } = request.body;
 
             const salt = bcrypt.genSaltSync(10);
 
-            const hashPassword = password;
+            const hashPassword = user.password;
 
             const hash = bcrypt.hashSync(hashPassword, salt);
 
             const userBoteria = {
-                name: name,
-                email: email,
-                phone: phone,
-                companyName: companyName,
-                password: password,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                companyName: user.companyName,
+                password: user.password,
                 source: 'LP_nuvemshop'
             };
 
             // AINDA É PRECISO CRIAR CONTA NO OMNI
-            const createUserBoteria = await boteriaService(userBoteria, tokenReCaptcha);
+            const createUserBoteria = await boteriaService(userBoteria, user.tokenReCaptcha);
 
             if (createUserBoteria.status === 200) {
-                const userEmail = await userSchema.find({ "email": email });
+
+                const userEmail = await userSchema.find({ "email": user.email });
 
                 if (userEmail.length === 0) {
 
-                    const copyTemplate = await copyTemplateBotService(createUserBoteria.companyId, createUserBoteria.organizationId, companyName, createUserBoteria.userId);
-                    let botPublished;
+                    const copyTemplate = await copyTemplateBotService(createUserBoteria.companyId, createUserBoteria.organizationId, user.companyName, createUserBoteria.userId, user.origin);
 
-                    if (copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
-                        botPublished = 1
+                    if (copyTemplate._id !== undefined) {
+
+                        let botPublished;
+
+                        if (copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
+                            botPublished = 1
+                        } else {
+                            botPublished = copyTemplate._id;
+                        }
+
+                        if (user.origin === 'nuvemshop') {
+                            await nuvemshopService(user.userIdStore, user.accessToken, botPublished);
+                        }
+
+                        const userSave = {
+                            name: user.name,
+                            email: user.email,
+                            phone: user.phone,
+                            companyName: user.companyName,
+                            accessToken: user.accessToken,
+                            password: hash,
+                            botPublish: botPublished,
+                            origin: user.origin,
+                            code_rd: user.code,
+                            boteria: {
+                                userIdBoteria: createUserBoteria.userId,
+                                dashboardToken: createUserBoteria.dashboardToken,
+                                companyId: createUserBoteria.companyId,
+                                organizationId: createUserBoteria.organizationId
+                            },
+                            closeInitialGif: false
+                        };
+
+                        user.origin === 'rd' ? userSave.refreshToken_rd = user.refreshToken : userSave.userIdStore = user.userIdStore
+
+                        await createUserService(userSave);
+
+                        return response.status(200).send({
+                            'result': 'success',
+                            'message': 'Usuário cadastrado com sucesso',
+                            'user': userSave,
+                            'status': 200
+                        });
                     } else {
-                        botPublished = copyTemplate._id;
+                        return response.status(200).send({
+                            'result': 'error',
+                            'message': 'Erro inesperado, tente novamente',
+                            'user': userEmail,
+                            'status': 422
+                        });
                     }
-
-                    await nuvemshopService(userIdStore, accessToken, botPublished);
-
-                    const user = {
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        companyName: companyName,
-                        userIdStore: userIdStore,
-                        accessToken: accessToken,
-                        password: hash,
-                        botPublish: botPublished,
-                        boteria: {
-                            userIdBoteria: createUserBoteria.userId,
-                            dashboardToken: createUserBoteria.dashboardToken,
-                            companyId: createUserBoteria.companyId,
-                            organizationId: createUserBoteria.organizationId
-                        },
-                        closeInitialGif: false
-                    };
-
-                    await createUserService(user);
-
-                    return response.status(200).send({
-                        'result': 'success',
-                        'message': 'Usuário cadastrado com sucesso',
-                        'user': user,
-                        'status': 200
-                    });
                 }
                 return response.status(200).send({
                     'result': 'error',

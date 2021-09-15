@@ -2,29 +2,29 @@ import { get } from 'mongoose';
 import getSettingsService from '../../../services/getSettingsBot.service';
 import updateSettingsBotService from '../../../services/updateSettingsBot.service';
 class UpdateSettingsBotControoler {
-  async update(request, response){
+  async update(request, response) {
     try {
       const
-      { mainColor,
-        secundaryColor,
-        mainTextColor,
-        secundaryTextColor,
-        sizeBotIcon,
-        botIcon,
-        isActive,
-        botId,
-        token,
-        headerName,
-      } = request.body;
+        { mainColor,
+          secondaryColor,
+          mainTextColor,
+          secondaryTextColor,
+          sizeBotIcon,
+          botIcon,
+          isActive,
+          botId,
+          token,
+          headerName,
+        } = request.body;
 
       const getSettings = await getSettingsService(token, botId);
 
       getSettings.channels.forEach(element => {
-        if(element.channelId === 'WebChat'){
+        if (element.channelId === 'WebChat') {
           element.settings.mainColor = mainColor;
-          element.settings.secondaryColor = secundaryColor;
+          element.settings.secondaryColor = secondaryColor;
           element.settings.mainTextColor = mainTextColor;
-          element.settings.secondaryTextColor = secundaryTextColor;
+          element.settings.secondaryTextColor = secondaryTextColor;
           element.settings.iconSize = sizeBotIcon;
           element.settings.botFab = botIcon;
           element.isActive = isActive;
