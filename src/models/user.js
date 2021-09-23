@@ -12,7 +12,8 @@ const UserSchema = new Schema({
   userIdStore: String,
   refreshToken_rd: String,
   botPublish: String,
-  origin: String,
+  origin_initial: String,
+  integrations: [],
   code_rd: String,
   boteria: {
     userIdBoteria: String,

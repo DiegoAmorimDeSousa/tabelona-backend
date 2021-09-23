@@ -17,25 +17,37 @@ class CreateUserController {
 
             const hash = bcrypt.hashSync(hashPassword, salt);
 
-            const userBoteria = {
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                companyName: user.companyName,
-                password: user.password,
-                source: 'LP_nuvemshop'
-            };
+            let createUserBoteria;
 
-            // AINDA É PRECISO CRIAR CONTA NO OMNI
-            const createUserBoteria = await boteriaService(userBoteria, user.tokenReCaptcha);
+            if (user.resource === 'partner') {
 
-            if (createUserBoteria.status === 200) {
+                const userBoteria = {
+                    name: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    companyName: user.companyName,
+                    password: user.password,
+                    source: user.origin
+                };
+
+                createUserBoteria = await boteriaService(userBoteria, user.tokenReCaptcha);
+            }
+
+            if (user.dashboardToken !== undefined || createUserBoteria.status === 200) {
 
                 const userEmail = await userSchema.find({ "email": user.email });
 
                 if (userEmail.length === 0) {
 
-                    const copyTemplate = await copyTemplateBotService(createUserBoteria.companyId, createUserBoteria.organizationId, user.companyName, createUserBoteria.userId, user.origin);
+                    const objCopyTemplate = {
+                        companyName: user.companyName,
+                        origin: user.origin === undefined ? 'boteria' : user.origin,
+                        companyId: createUserBoteria !== undefined ? createUserBoteria.companyId : user.companyId,
+                        organizationId: createUserBoteria !== undefined ? createUserBoteria.organizationId : user.organizationId,
+                        userId: createUserBoteria !== undefined ? createUserBoteria.userId : user.userId
+                    }
+
+                    const copyTemplate = await copyTemplateBotService(objCopyTemplate);
 
                     if (copyTemplate._id !== undefined) {
 
@@ -59,18 +71,21 @@ class CreateUserController {
                             accessToken: user.accessToken,
                             password: hash,
                             botPublish: botPublished,
-                            origin: user.origin,
+                            origin_initial: user.origin === undefined ? 'boteria' : user.origin,
+                            integrations: [user.origin === undefined ? 'boteria' : user.origin],
                             code_rd: user.code,
                             boteria: {
-                                userIdBoteria: createUserBoteria.userId,
-                                dashboardToken: createUserBoteria.dashboardToken,
-                                companyId: createUserBoteria.companyId,
-                                organizationId: createUserBoteria.organizationId
+                                userIdBoteria: createUserBoteria !== undefined ? createUserBoteria.userId : user.userId,
+                                dashboardToken: createUserBoteria !== undefined ? createUserBoteria.dashboardToken : user.dashboardToken,
+                                companyId: createUserBoteria !== undefined ? createUserBoteria.companyId : user.companyId,
+                                organizationId: createUserBoteria !== undefined ? createUserBoteria.organizationId : user.organizationId
                             },
                             closeInitialGif: false
                         };
 
                         user.origin === 'rd' ? userSave.refreshToken_rd = user.refreshToken : userSave.userIdStore = user.userIdStore
+
+                        console.log('USER SAVE', userSave);
 
                         await createUserService(userSave);
 

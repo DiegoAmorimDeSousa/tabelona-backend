@@ -11,7 +11,7 @@ class getCodeController {
             "grant_type": "authorization_code",
             "code": code
         }).then(result => {
-            response.redirect(`${process.env.URL_FRONT}/signup/rd/${result.data.refresh_token}/${result.data.access_token}/${code}`);
+            response.redirect(`${process.env.URL_FRONT}/signin/rd/${result.data.refresh_token}/${result.data.access_token}/${code}`);
         }).catch(() => { });
 
         return response.status(200);

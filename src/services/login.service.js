@@ -3,8 +3,10 @@ import createToken from './createToken.service';
 import loginBoteriaService from './loginBoteria.service';
 import bcrypt from 'bcrypt';
 
-async function loginService(email, password, tokenReCaptcha, res) {
+async function loginService(email, password, tokenReCaptcha, origin, accessToken, code, userIdStore, refreshToken_rd, res) {
   const obj = {};
+
+  console.log('ORIGIN', origin, accessToken, code, userIdStore, refreshToken_rd);
 
   await User.findOne({ email: email })
     .then(async (response) => {

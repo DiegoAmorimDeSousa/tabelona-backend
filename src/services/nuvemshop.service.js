@@ -4,7 +4,8 @@ import { api_url, api_url_nuvemshop } from '../utils/config';
 async function nuvemshopService(user_id, access_token, idBot) {
 
     const data = JSON.stringify({
-        "src": `https://${api_url}/partner/bot/wid/${idBot}`,
+        "src": `${api_url}/partner/bot/wid/${idBot}`,
+        // "src": `https://${api_url}/partner/bot/wid/${idBot}`,
         "event": "onload",
         "where": "store"
     });

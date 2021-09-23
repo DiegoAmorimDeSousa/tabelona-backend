@@ -26,7 +26,7 @@
           $( document ).ready(function() {
             setTimeout(() => {
                 window.renderBotWidget(
-                    '6141f18d0d633b0134eb63f1'
+                    '614a3f888ae31e02dde5484a'
                 );
             }, 3000);
           });

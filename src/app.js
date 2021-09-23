@@ -57,6 +57,7 @@ class App {
     this.server.use(helmet());
     this.server.use('/', apiLimiter);
     this.server.use(function (req, res, next) {
+
       const url = req.url;
 
       const urlSplice = url.split('/');

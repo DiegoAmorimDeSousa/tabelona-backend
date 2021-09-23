@@ -3,6 +3,7 @@ import axios from 'axios';
 
 class AuthorizeNuvemshopController {
   async authorize(request, response) {
+
     try {
       axios.post(authorize_app, {
         client_id: client_id,
@@ -10,7 +11,7 @@ class AuthorizeNuvemshopController {
         grant_type: "authorization_code",
         code: request.query.code
       }).then(result => {
-        response.redirect(`https://${url_front}/signup/nuvemshop/${result.data.user_id}/${result.data.access_token}`);
+        response.redirect(`https://${url_front}/signin/nuvemshop/${result.data.user_id}/${result.data.access_token}`);
       }).catch(err => {
         return response.json(err);
       });

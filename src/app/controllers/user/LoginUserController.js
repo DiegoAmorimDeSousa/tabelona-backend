@@ -3,10 +3,19 @@ import loginTokenService from '../../../services/loginToken.service';
 
 class LoginUserController {
   async login(request, response) {
-    const { email, password, tokenReCaptcha, tokenBoteria } = request.body;
+    const {
+      email,
+      password,
+      tokenReCaptcha,
+      tokenBoteria,
+      origin,
+      accessToken,
+      code,
+      userIdStore,
+      refreshToken_rd } = request.body;
 
     if (tokenBoteria === undefined) {
-      const login = await loginService(email, password, tokenReCaptcha);
+      const login = await loginService(email, password, tokenReCaptcha, origin, accessToken, code, userIdStore, refreshToken_rd);
 
       return response.json(login);
     } else {
