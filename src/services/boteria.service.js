@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../utils/logger';
 import { api_boteria } from '../utils/config';
 
 async function boteriaService(user, tokenReCaptcha) {
@@ -18,10 +19,14 @@ async function boteriaService(user, tokenReCaptcha) {
       createUser.companyId = response.data.companyId;
       createUser.userId = response.data.userId;
       createUser.organizationId = response.data.organizationId;
+
+      logger.info(`Created user boteria success`);
     }).catch(err => {
       createUser.status = 422;
       createUser.message = 'error creates user';
       createUser.error = err.response.data.errors;
+
+      logger.error(`Created user boteria error: ${err.data}`);
     });
 
   return createUser;

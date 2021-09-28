@@ -9,7 +9,22 @@ class CountMessagesBotController {
         { email: email },
       );
 
-      const countMessages = await countMessagesUserBoteriaService(userEmail[0].boteria.companyId, userEmail[0].boteria.dashboardToken);
+      let companyId = '';
+      let dashboardToken = '';
+
+      if(userEmail[0].boteria === undefined || userEmail[0].boteria.companyId === undefined) {
+        userEmail[0].integrations.forEach(element => {
+          if(element.name === 'boteria'){
+            companyId = element.companyId;
+            dashboardToken = element.dashboardToken;
+          };
+        })
+      } else {
+        companyId = userEmail[0].boteria.companyId;
+        dashboardToken = userEmail[0].boteria.dashboardToken;
+      }
+
+      const countMessages = await countMessagesUserBoteriaService(companyId, dashboardToken);
 
       return response.json(countMessages);
     } catch (error) {

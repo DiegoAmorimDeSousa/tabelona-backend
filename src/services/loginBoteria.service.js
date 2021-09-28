@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../utils/logger';
 import { api_boteria } from '../utils/config';
 
 async function loginBoteria(email, password, tokenReCaptcha) {
@@ -21,8 +22,11 @@ async function loginBoteria(email, password, tokenReCaptcha) {
       loginUser.userId = result.data.user._id;
       loginUser.organizationId = result.data.user.organizationIds[0];
       loginUser.tokenBoteria = result.data.token;
+
+      logger.info(`Login boteria success`);
     })
     .catch((err) => {
+      logger.error(`Login boteria error: ${err}`);
       loginUser.status = 422
     });
 

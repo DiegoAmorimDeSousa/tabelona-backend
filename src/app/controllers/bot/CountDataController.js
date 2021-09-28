@@ -13,9 +13,21 @@ class CountDataController {
 
     start_date.setDate(start_date.getDate() - 30);
 
+    let tokenBoteria = '';
+
+    if(userEmail[0].boteria === undefined) {
+      userEmail[0].integrations.map(element => {
+        if(element.name === 'boteria'){
+          tokenBoteria = element.dashboardToken;
+        };
+      });
+    } else {
+      tokenBoteria = userEmail[0].boteria.dashboardToken;
+    }
+
     const obj = {
       botId: userEmail[0].botPublish,
-      token: userEmail[0].boteria.dashboardToken,
+      token: tokenBoteria,
       startDate: start_date,
       endDate: end_date,
     }

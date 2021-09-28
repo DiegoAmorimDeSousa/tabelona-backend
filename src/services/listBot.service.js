@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { list_bot, key_boteria } from '../utils/config';
+import logger from '../utils/logger';
+import { list_bot } from '../utils/config';
 
 async function listBotService(token) {
 
@@ -9,8 +10,10 @@ async function listBotService(token) {
     }
   })
     .then(result => {
+      logger.info(`Get list bot success`);
       return result.data;
     }).catch(error => {
+      logger.error(`Get list bot error: ${error.data}`);
       return error;
     })
 

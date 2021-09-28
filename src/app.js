@@ -16,6 +16,8 @@ import { url, secret } from './utils/config';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
+import logger from './utils/logger';
+
 var path = require('path');
 global.appRoot = path.resolve(__dirname);
 
@@ -46,9 +48,9 @@ class App {
       useFindAndModify: false
     })
       .then(() => {
-        console.log('MongoDB Conected');
+        logger.debug('MongoDB Conected');
       })
-      .catch(err => console.log(err));
+      .catch(err => logger.error(err));
   }
 
   middlewares() {
@@ -118,8 +120,23 @@ class App {
         }
       }
     });
-    this.server.use(morgan('combined'));
-    morganBody(this.server, { prettify: false });
+    this.server.use(
+      morgan((tokens, req, res) => {
+        logger.debug(
+          [
+            tokens.method(req, res),
+            tokens.url(req, res),
+            '->',
+            'Http Status:',
+            tokens.status(req, res),
+            '->',
+            'Response time:',
+            tokens['response-time'](req, res),
+            'ms',
+          ].join(' ')
+        );
+      })
+    );
   }
 
   routes() {

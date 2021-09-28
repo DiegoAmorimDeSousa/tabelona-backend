@@ -1,4 +1,5 @@
 import { api_boteria_copy_template, template_id_nuvemshop, template_id_rd, api_boteria, key_boteria } from '../utils/config';
+import logger from '../utils/logger';
 import axios from 'axios';
 
 async function copyTemplateBotService(objCopyTemplate) {
@@ -18,9 +19,12 @@ async function copyTemplateBotService(objCopyTemplate) {
       userId: objCopyTemplate.userId
     })
 
+    logger.info(`Copy bot success`);
+
     return response.data;
 
   }).catch(error => {
+    logger.error(`Copy bot error: ${error.response.data}`);
     return error.response.data;
   })
 

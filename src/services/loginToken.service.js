@@ -1,6 +1,7 @@
 import User from '../models/user';
 import createToken from './createToken.service';
 import bcrypt from 'bcrypt';
+import logger from '../utils/logger';
 
 async function loginTokenService(email, password, tokenBoteria, res) {
 
@@ -16,18 +17,25 @@ async function loginTokenService(email, password, tokenBoteria, res) {
             obj.token = createToken({ id: response._id }),
             obj.response = response
 
+            logger.info(`Login user success`);
+
         } else {
           obj.status = 422
           obj.message = 'Senha incorreta';
           obj.result = 'error';
+
+          logger.error(`Login user error: ${obj.message}`);
         }
       } else {
         obj.status = 422
         obj.message = 'Usuário não encontrado';
         obj.result = 'error';
+
+        logger.error(`Login user error: ${obj.message}`);
       }
     })
     .catch(e => {
+      logger.error(`Login user error: Erros Internos`);
       return res.status(500).send(e, 'Erros Internos');
     });
 

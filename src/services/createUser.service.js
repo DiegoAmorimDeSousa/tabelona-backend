@@ -1,13 +1,14 @@
 import User from '../models/user';
+import logger from '../utils/logger';
 
 function createUserService(user){
 
   User(user)
       .save()
       .then(() => {
-        console.log('user created');
+        logger.info('user created');
       })
-      .catch(err => console.log('ERROR CREATED: ', err));
+      .catch(err => logger.error('ERROR CREATED: ', err));
 }
 
 export default createUserService;

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../utils/logger';
 import { api_url_nuvemshop } from '../utils/config';
 
 async function getScriptNuvemshopService(userId, accessToken) {
@@ -15,9 +16,11 @@ async function getScriptNuvemshopService(userId, accessToken) {
 
   const getScript = await axios(config)
   .then(function (responsePost) {
+    logger.info(`Script in store nuvemshop: ${responsePost.data}`);
     return responsePost.data;
   })
   .catch(function (error) {
+    logger.error(`Get script error: ${error.data}`);
     return error;
   });
 

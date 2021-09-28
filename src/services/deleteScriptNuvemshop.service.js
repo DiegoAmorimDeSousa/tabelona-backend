@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../utils/logger';
 import { api_url_nuvemshop } from '../utils/config';
 
 function deleteScripNuvemshopService(userId, accessToken, scriptId) {
@@ -16,9 +17,11 @@ function deleteScripNuvemshopService(userId, accessToken, scriptId) {
 
     const deleteScript = await axios(config)
       .then(function (responsePost) {
+        logger.info(`Delete script in store success`);
         return JSON.stringify(responsePost.data);
       })
       .catch(function (error) {
+        logger.error(`Delete script in store error`);
         return error;
       });
 

@@ -1,6 +1,6 @@
 import { api_boteria } from '../utils/config';
 import axios from 'axios';
-import moment from 'moment';
+import logger from '../utils/logger';
 
 async function countMessagesUserBoteria(companyId, token) {
 
@@ -14,12 +14,15 @@ async function countMessagesUserBoteria(companyId, token) {
     ${api_boteria}/dashboard/company/messages/count?company=${companyId}&token=${token}&start_date=${start_date}&end_date=${end_date}`)
     .then(result => {
       if (result.data[0] === undefined) {
+        logger.info(`Quantity messages consumed: ${0}`)
         return 0
       } else {
+        logger.info(`Quantity messages consumed: ${result.data[0].count}`)
         return result.data[0].count;
       }
     })
     .catch(error => {
+      logger.error(`Quantity messages error: ${error.data}`);
       return error;
     })
 

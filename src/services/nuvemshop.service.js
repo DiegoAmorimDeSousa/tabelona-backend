@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../utils/logger';
 import { api_url, api_url_nuvemshop } from '../utils/config';
 
 async function nuvemshopService(user_id, access_token, idBot) {
@@ -22,9 +23,11 @@ async function nuvemshopService(user_id, access_token, idBot) {
 
     const publish = await axios(config)
         .then(function (responsePost) {
+            logger.info(`Published bot in store success`);
             return JSON.stringify(responsePost.data);
         })
         .catch(function (error) {
+            logger.error(`Failed to publish: ${error.data}`);
             return error;
         });
 

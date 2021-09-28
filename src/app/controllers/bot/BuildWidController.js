@@ -1,5 +1,6 @@
 import { boteria_front } from '../../../utils/config';
 import fs from 'fs';
+import logger from '../../../utils/logger';
 
 class BuildWidController {
   async wid(request, response) {
@@ -47,6 +48,7 @@ class BuildWidController {
 
       return response.status(200);
     } catch (error) {
+      logger.error('Arquivo de webchat não copiado');
       return response.json(error);
     }
   }

@@ -13,14 +13,30 @@ class PublishBotController {
         {botPublish: botId}
       );
 
-      const getScript = await getScriptNuvemshopService(userEmail.userIdStore, userEmail.accessToken);
+      let userIdStore = ''
+      let accessToken = ''
+
+      if(userEmail.userIdStore === undefined) {
+          for (let i = 0; i < userEmail.integrations.length; i++) {
+            const element = userEmail.integrations[i];
+            if(element.name === 'nuvemshop'){
+              userIdStore = element.userIdStore;
+              accessToken = element.accessToken;
+            }
+          }
+      } else {
+        userIdStore = userEmail.userIdStore;
+        accessToken = userEmail.accessToken
+      }
+
+      const getScript = await getScriptNuvemshopService(userIdStore, accessToken);
 
       if(getScript.length === 0){
-        const publishi = await nuvemshopService(userEmail.userIdStore, userEmail.accessToken, botId);
+        const publishi = await nuvemshopService(userIdStore, accessToken, botId);
         return response.json(publishi);
       } else {
-        await deleteScriptNuvemshopService(userEmail.userIdStore, userEmail.accessToken, getScript);
-        const publishi = await nuvemshopService(userEmail.userIdStore, userEmail.accessToken, botId);
+        await deleteScriptNuvemshopService(userIdStore, accessToken, getScript);
+        const publishi = await nuvemshopService(userIdStore, accessToken, botId);
         return response.json(publishi);
       }
     } catch (error) {

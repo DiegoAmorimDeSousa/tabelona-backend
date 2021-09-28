@@ -12,13 +12,28 @@ class DeleteBotController {
         { botPublish: 1 }
       );
 
-      const getScript = await getScriptNuvemshopService(userEmail.userIdStore, userEmail.accessToken);
+      let userIdStore = ''
+      let accessToken = ''
 
-      if (getScript.length !== 0) {
-        const deleteScript = await deleteScriptNuvemshopService(userEmail.userIdStore, userEmail.accessToken, getScript);
-        return response.json(deleteScript);
+      if(userEmail.userIdStore === undefined) {
+          for (let i = 0; i < userEmail.integrations.length; i++) {
+            const element = userEmail.integrations[i];
+            if(element.name === 'nuvemshop'){
+              userIdStore = element.userIdStore;
+              accessToken = element.accessToken;
+            }
+          }
+      } else {
+        userIdStore = userEmail.userIdStore;
+        accessToken = userEmail.accessToken
       }
 
+      const getScript = await getScriptNuvemshopService(userIdStore, accessToken);
+
+      if (getScript.length !== 0) {
+        const deleteScript = await deleteScriptNuvemshopService(userIdStore, accessToken, getScript);
+        return response.json(deleteScript);
+      }
 
       return response.status(200);
     } catch (error) {

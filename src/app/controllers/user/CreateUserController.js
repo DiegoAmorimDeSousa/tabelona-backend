@@ -4,6 +4,7 @@ import boteriaService from '../../../services/boteria.service';
 import copyTemplateBotService from '../../../services/copyTemplateBot.service';
 import nuvemshopService from '../../../services/nuvemshop.service';
 import userSchema from '../../../models/user';
+import logger from '../../../utils/logger';
 
 class CreateUserController {
     async create(request, response) {
@@ -47,13 +48,27 @@ class CreateUserController {
                         userId: createUserBoteria !== undefined ? createUserBoteria.userId : user.userId
                     }
 
-                    const copyTemplate = await copyTemplateBotService(objCopyTemplate);
+                    let copyTemplate = '';
 
-                    if (copyTemplate._id !== undefined) {
+                    if(user.resource === 'partner'){
+                      copyTemplate = await copyTemplateBotService(objCopyTemplate);
+                    }
+
+                    if (copyTemplate !== '' && user.resource !== 'partner') {
+
+                      logger.error('Erro inesperado, tente novamente');
+
+                      return response.status(200).send({
+                          'result': 'error',
+                          'message': 'Erro inesperado, tente novamente',
+                          'user': userEmail,
+                          'status': 422
+                      });
+                    } else {
 
                         let botPublished;
 
-                        if (copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
+                        if (copyTemplate === '' || copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
                             botPublished = 1
                         } else {
                             botPublished = copyTemplate._id;
@@ -63,29 +78,48 @@ class CreateUserController {
                             await nuvemshopService(user.userIdStore, user.accessToken, botPublished);
                         }
 
+                        const integrationArray = [];
+
+                        if(user.resource === 'partner'){
+                          const integration = {
+                            name: user.origin,
+                          }
+
+                          user.origin !== undefined ? integration.accessToken = user.accessToken : ''
+                          user.origin === 'rd' ? integration.refreshToken_rd = user.refreshToken : integration.userIdStore = user.userIdStore
+                          user.origin === 'rd' ? integration.code = user.code : ''
+
+                          const integrationBoteria = {
+                            name: 'boteria',
+                            userIdBoteria: createUserBoteria.userId,
+                            dashboardToken: createUserBoteria.dashboardToken,
+                            companyId: createUserBoteria.companyId,
+                            organizationId: createUserBoteria.organizationId,
+                          }
+
+                          integrationArray.push(integration, integrationBoteria);
+                        } else {
+                          const integrationBoteria = {
+                            name: 'boteria',
+                            userIdBoteria: user.userId,
+                            dashboardToken: user.dashboardToken,
+                            companyId: user.companyId,
+                            organizationId: user.organizationId
+                          }
+
+                          integrationArray.push(integrationBoteria);
+                        }
+
                         const userSave = {
                             name: user.name,
                             email: user.email,
                             phone: user.phone,
                             companyName: user.companyName,
-                            accessToken: user.accessToken,
                             password: hash,
                             botPublish: botPublished,
-                            origin_initial: user.origin === undefined ? 'boteria' : user.origin,
-                            integrations: [user.origin === undefined ? 'boteria' : user.origin],
-                            code_rd: user.code,
-                            boteria: {
-                                userIdBoteria: createUserBoteria !== undefined ? createUserBoteria.userId : user.userId,
-                                dashboardToken: createUserBoteria !== undefined ? createUserBoteria.dashboardToken : user.dashboardToken,
-                                companyId: createUserBoteria !== undefined ? createUserBoteria.companyId : user.companyId,
-                                organizationId: createUserBoteria !== undefined ? createUserBoteria.organizationId : user.organizationId
-                            },
-                            closeInitialGif: false
+                            originInitial: user.origin === undefined ? 'boteria' : user.origin,
+                            integrations: integrationArray
                         };
-
-                        user.origin === 'rd' ? userSave.refreshToken_rd = user.refreshToken : userSave.userIdStore = user.userIdStore
-
-                        console.log('USER SAVE', userSave);
 
                         await createUserService(userSave);
 
@@ -95,15 +129,11 @@ class CreateUserController {
                             'user': userSave,
                             'status': 200
                         });
-                    } else {
-                        return response.status(200).send({
-                            'result': 'error',
-                            'message': 'Erro inesperado, tente novamente',
-                            'user': userEmail,
-                            'status': 422
-                        });
                     }
                 }
+
+                logger.error('Usuário já existente');
+
                 return response.status(200).send({
                     'result': 'error',
                     'message': 'Usuário já existente, insira outro email',
