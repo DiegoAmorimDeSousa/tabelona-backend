@@ -26,7 +26,7 @@ async function boteriaService(user, tokenReCaptcha) {
       createUser.message = 'error creates user';
       createUser.error = err.response.data.errors;
 
-      logger.error(`Created user boteria error: ${err.data}`);
+      logger.error(`Created user boteria error: ${err.response}`);
     });
 
   return createUser;

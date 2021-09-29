@@ -1,6 +1,7 @@
 import User from '../models/user';
 import createToken from './createToken.service';
 import loginBoteriaService from './loginBoteria.service';
+import updateIntegrationUser from './UpdateIntegrationUser.service';
 import bcrypt from 'bcrypt';
 import logger from '../utils/logger';
 
@@ -12,26 +13,18 @@ async function loginService(email, password, tokenReCaptcha, origin, accessToken
       if (response) {
         if (bcrypt.compareSync(password.toString(), response.password.toString())) {
 
-          if(response.originInitial){
+          if(response.originInitial === 'boteria'){
             await User.updateOne({email: email}, {
               originInitial: origin
-            }).then(() => {console.log('Origin Initial updated')})
-            .catch(err => {console.log(err)});
+            }).then(() => {logger.info('Origin Initial updated')})
+            .catch(err => {logger.error(err)});
           }
 
-          const updateIntegrations = {};
+          if(accessToken.length > 0){
 
-          updateIntegrations.name = origin;
-          updateIntegrations.accessToken = accessToken;
+            await updateIntegrationUser(email, origin, accessToken, code, userIdStore, refreshToken_rd, response);
 
-          code !== undefined ? updateIntegrations.code = code : '';
-          userIdStore !== undefined ? updateIntegrations.userId = userIdStore : '';
-          refreshToken_rd !== undefined ? updateIntegrations.refreshToken = refreshToken_rd : '';
-
-          await User.updateOne({email: email}, {
-            $push: {integrations: updateIntegrations}
-          }).then(() => {console.log('User updated')})
-          .catch(err => {console.log(err)});
+          }
 
           const loginUserBoteriaService = await loginBoteriaService(email, password, tokenReCaptcha);
 

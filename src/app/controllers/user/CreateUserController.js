@@ -85,9 +85,12 @@ class CreateUserController {
                             name: user.origin,
                           }
 
+                          botPublished !== 1 ? integration.templateBotId = botPublished : '';
+
                           user.origin !== undefined ? integration.accessToken = user.accessToken : ''
                           user.origin === 'rd' ? integration.refreshToken_rd = user.refreshToken : integration.userIdStore = user.userIdStore
                           user.origin === 'rd' ? integration.code = user.code : ''
+                          user.origin === 'rd' ? integration.redirectValue = 1 : '';
 
                           const integrationBoteria = {
                             name: 'boteria',
