@@ -20,132 +20,139 @@ class CreateUserController {
 
             let createUserBoteria;
 
-            if (user.resource === 'partner') {
+            const userEmail = await userSchema.find({ "email": 'diegoASsousa@gmail.com' });
 
-                const userBoteria = {
-                    name: user.name,
-                    email: user.email,
-                    phone: user.phone,
-                    companyName: user.companyName,
-                    password: user.password,
-                    source: user.origin
-                };
+            console.log(userEmail);
 
-                createUserBoteria = await boteriaService(userBoteria, user.tokenReCaptcha);
-            }
+            // if (user.resource === 'partner') {
 
-            if (user.dashboardToken !== undefined || createUserBoteria.status === 200) {
+            //     const userBoteria = {
+            //         name: user.name,
+            //         email: user.email,
+            //         phone: user.phone,
+            //         companyName: user.companyName,
+            //         password: user.password,
+            //         source: 'LP_nuvemshop'
+            //     };
 
-                const userEmail = await userSchema.find({ "email": user.email });
+            //     createUserBoteria = await boteriaService(userBoteria, user.tokenReCaptcha);
+            // }
 
-                if (userEmail.length === 0) {
+            // if (user.dashboardToken !== undefined || createUserBoteria.status === 200) {
 
-                    const objCopyTemplate = {
-                        companyName: user.companyName,
-                        origin: user.origin === undefined ? 'boteria' : user.origin,
-                        companyId: createUserBoteria !== undefined ? createUserBoteria.companyId : user.companyId,
-                        organizationId: createUserBoteria !== undefined ? createUserBoteria.organizationId : user.organizationId,
-                        userId: createUserBoteria !== undefined ? createUserBoteria.userId : user.userId
-                    }
+            //     const userEmail = await userSchema.find({ "email": user.email });
 
-                    let copyTemplate = '';
+            //     if (userEmail.length === 0) {
 
-                    if(user.resource === 'partner'){
-                      copyTemplate = await copyTemplateBotService(objCopyTemplate);
-                    }
+            //         const objCopyTemplate = {
+            //             companyName: user.companyName,
+            //             origin: user.origin === undefined ? 'boteria' : user.origin,
+            //             companyId: createUserBoteria !== undefined ? createUserBoteria.companyId : user.companyId,
+            //             organizationId: createUserBoteria !== undefined ? createUserBoteria.organizationId : user.organizationId,
+            //             userId: createUserBoteria !== undefined ? createUserBoteria.userId : user.userId
+            //         }
 
-                    if (copyTemplate !== '' && user.resource !== 'partner') {
+            //         let copyTemplate = '';
 
-                      logger.error('Erro inesperado, tente novamente');
+            //         if(user.resource === 'partner'){
+            //           copyTemplate = await copyTemplateBotService(objCopyTemplate);
+            //         }
 
-                      return response.status(200).send({
-                          'result': 'error',
-                          'message': 'Erro inesperado, tente novamente',
-                          'user': userEmail,
-                          'status': 422
-                      });
-                    } else {
+            //         if (copyTemplate !== '' && user.resource !== 'partner') {
 
-                        let botPublished;
+            //           logger.error('Erro inesperado, tente novamente');
 
-                        if (copyTemplate === '' || copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
-                            botPublished = 1
-                        } else {
-                            botPublished = copyTemplate._id;
-                        }
+            //           return response.status(200).send({
+            //               'result': 'error',
+            //               'message': 'Erro inesperado, tente novamente',
+            //               'user': userEmail,
+            //               'status': 422
+            //           });
+            //         } else {
 
-                        if (user.origin === 'nuvemshop') {
-                            await nuvemshopService(user.userIdStore, user.accessToken, botPublished);
-                        }
+            //             let botPublished;
 
-                        const integrationArray = [];
+            //             if (copyTemplate === '' || copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
+            //                 botPublished = 1
+            //             } else {
+            //                 botPublished = copyTemplate._id;
+            //             }
 
-                        if(user.resource === 'partner'){
-                          const integration = {
-                            name: user.origin,
-                          }
+            //             console.log(botPublished);
 
-                          botPublished !== 1 ? integration.templateBotId = botPublished : '';
+            //             if (user.origin === 'nuvemshop') {
+            //               console.log('BATEU NUBEMSHOP');
+            //               await nuvemshopService(user.userIdStore, user.accessToken, botPublished);
+            //             }
 
-                          user.origin !== undefined ? integration.accessToken = user.accessToken : ''
-                          user.origin === 'rd' ? integration.refreshToken_rd = user.refreshToken : integration.userIdStore = user.userIdStore
-                          user.origin === 'rd' ? integration.code = user.code : ''
-                          user.origin === 'rd' ? integration.redirectValue = 1 : '';
+            //             const integrationArray = [];
 
-                          const integrationBoteria = {
-                            name: 'boteria',
-                            userIdBoteria: createUserBoteria.userId,
-                            dashboardToken: createUserBoteria.dashboardToken,
-                            companyId: createUserBoteria.companyId,
-                            organizationId: createUserBoteria.organizationId,
-                          }
+            //             if(user.resource === 'partner'){
+            //               const integration = {
+            //                 name: user.origin,
+            //               }
 
-                          integrationArray.push(integration, integrationBoteria);
-                        } else {
-                          const integrationBoteria = {
-                            name: 'boteria',
-                            userIdBoteria: user.userId,
-                            dashboardToken: user.dashboardToken,
-                            companyId: user.companyId,
-                            organizationId: user.organizationId
-                          }
+            //               botPublished !== 1 ? integration.templateBotId = botPublished : '';
 
-                          integrationArray.push(integrationBoteria);
-                        }
+            //               user.origin !== undefined ? integration.accessToken = user.accessToken : ''
+            //               user.origin === 'rd' ? integration.refreshToken_rd = user.refreshToken : integration.userIdStore = user.userIdStore
+            //               user.origin === 'rd' ? integration.code = user.code : ''
+            //               user.origin === 'rd' ? integration.redirectValue = 1 : '';
 
-                        const userSave = {
-                            name: user.name,
-                            email: user.email,
-                            phone: user.phone,
-                            companyName: user.companyName,
-                            password: hash,
-                            botPublish: botPublished,
-                            originInitial: user.origin === undefined ? 'boteria' : user.origin,
-                            integrations: integrationArray
-                        };
+            //               const integrationBoteria = {
+            //                 name: 'boteria',
+            //                 userIdBoteria: createUserBoteria.userId,
+            //                 dashboardToken: createUserBoteria.dashboardToken,
+            //                 companyId: createUserBoteria.companyId,
+            //                 organizationId: createUserBoteria.organizationId,
+            //               }
 
-                        await createUserService(userSave);
+            //               integrationArray.push(integration, integrationBoteria);
+            //             } else {
+            //               const integrationBoteria = {
+            //                 name: 'boteria',
+            //                 userIdBoteria: user.userId,
+            //                 dashboardToken: user.dashboardToken,
+            //                 companyId: user.companyId,
+            //                 organizationId: user.organizationId
+            //               }
 
-                        return response.status(200).send({
-                            'result': 'success',
-                            'message': 'Usuário cadastrado com sucesso',
-                            'user': userSave,
-                            'status': 200
-                        });
-                    }
-                }
+            //               integrationArray.push(integrationBoteria);
+            //             }
 
-                logger.error('Usuário já existente');
+            //             const userSave = {
+            //                 name: user.name,
+            //                 email: user.email,
+            //                 phone: user.phone,
+            //                 companyName: user.companyName,
+            //                 password: hash,
+            //                 botPublish: botPublished,
+            //                 originInitial: user.origin === undefined ? 'boteria' : user.origin,
+            //                 integrations: integrationArray
+            //             };
 
-                return response.status(200).send({
-                    'result': 'error',
-                    'message': 'Usuário já existente, insira outro email',
-                    'user': userEmail,
-                    'status': 422
-                });
-            } else if (createUserBoteria.status === 422) {
-                return response.status(200).send(createUserBoteria);
-            }
+            //             await createUserService(userSave);
+
+            //             return response.status(200).send({
+            //                 'result': 'success',
+            //                 'message': 'Usuário cadastrado com sucesso',
+            //                 'user': userSave,
+            //                 'status': 200
+            //             });
+            //         }
+            //     }
+
+            //     logger.error('Usuário já existente');
+
+            //     return response.status(200).send({
+            //         'result': 'error',
+            //         'message': 'Usuário já existente, insira outro email',
+            //         'user': userEmail,
+            //         'status': 422
+            //     });
+            // } else if (createUserBoteria.status === 422) {
+            //     return response.status(200).send(createUserBoteria);
+            // }
         } catch (error) {
             return response.json(error);
         }

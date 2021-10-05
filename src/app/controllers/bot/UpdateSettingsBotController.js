@@ -15,6 +15,7 @@ class UpdateSettingsBotControoler {
           botId,
           token,
           headerName,
+          userData
         } = request.body;
 
       const getSettings = await getSettingsService(token, botId);
@@ -32,7 +33,7 @@ class UpdateSettingsBotControoler {
         }
       });
 
-      await updateSettingsBotService(getSettings, botId, token);
+      await updateSettingsBotService(getSettings, botId, token, userData);
 
       return response.json('success');
     } catch (error) {

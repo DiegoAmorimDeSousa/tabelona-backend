@@ -16,70 +16,104 @@ class BoteriaLoginUserController {
 
       const hash = bcrypt.hashSync(hashPassword, salt);
 
-      // AINDA É PRECISO CRIAR CONTA NO OMNI
-      const loginUserBoteria = await loginBoteriaService(user.email, user.password, user.tokenReCaptcha);
+      console.log('CHEGOU AQUI HASH');
 
-      if (loginUserBoteria.status === 200) {
+      // const loginUserBoteria = await loginBoteriaService(user.email, user.password, user.tokenReCaptcha);
 
-        const userEmail = await userSchema.find({ "email": user.email });
+      // if (loginUserBoteria.status === 200) {
 
-        if (userEmail.length === 0) {
+      //   const userEmail = await userSchema.find({ "email": user.email });
 
-          const copyTemplate = await copyTemplateBotService(loginUserBoteria.companyId, loginUserBoteria.organizationId, user.companyName, loginUserBoteria.userId);
+      //   if (userEmail.length === 0) {
 
-          let botPublished;
+      //         const objCopyTemplate = {
+            //             companyName: user.companyName,
+            //             origin: user.origin,
+            //             companyId: loginUserBoteria.companyId,
+            //             organizationId: loginUserBoteria.organizationId,
+            //             userId: loginUserBoteria.userId
+            //         }
 
-          if (copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '') {
-            botPublished = 1
-          } else {
-            botPublished = copyTemplate._id;
-          }
+      //     const copyTemplate = await copyTemplateBotService(objCopyTemplate);
 
-          if (user.origin === 'nuvemshop') {
-            await nuvemshopService(user.userIdStore, user.accessToken, botPublished);
-          }
+      //     let botPublished;
 
-          const userSave = {
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            companyName: user.companyName,
-            accessToken: user.accessToken,
-            password: hash,
-            botPublish: botPublished,
-            origin: user.origin,
-            code_rd: user.code,
-            boteria: {
-              userIdBoteria: loginUserBoteria.userId,
-              dashboardToken: loginUserBoteria.dashboardToken,
-              companyId: loginUserBoteria.companyId,
-              organizationId: loginUserBoteria.organizationId
-            },
-            closeInitialGif: false
-          };
+      //     if (copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '') {
+      //       botPublished = 1
+      //     } else {
+      //       botPublished = copyTemplate._id;
+      //     }
 
-          user.origin === 'rd' ? userSave.refreshToken_rd = user.refreshToken : userSave.userIdStore = user.userIdStore;
+      //     if (user.origin === 'nuvemshop') {
+      //       await nuvemshopService(user.userIdStore, user.accessToken, botPublished);
+      //     }
 
-          createUserService(userSave);
+       //             const integrationArray = [];
 
-          return response.status(200).send({
-            'result': 'success',
-            'message': 'Usuário cadastrado com sucesso',
-            'user': userSave,
-            'token': loginUserBoteria.tokenBoteria
-          });
-        }
-        return response.status(200).send({
-          'result': 'error',
-          'message': 'Usuário já existente, insira outro email',
-          'user': userEmail
-        });
-      } else {
-        return response.status(200).send({
-          'result': 'error',
-          'message': 'Erro ao tentar localizar seu usário, tente novamente',
-        });
-      }
+            //             if(user.resource === 'partner'){
+            //               const integration = {
+            //                 name: user.origin,
+            //               }
+
+            //               botPublished !== 1 ? integration.templateBotId = botPublished : '';
+
+            //               user.origin !== undefined ? integration.accessToken = user.accessToken : ''
+            //               user.origin === 'rd' ? integration.refreshToken_rd = user.refreshToken : integration.userIdStore = user.userIdStore
+            //               user.origin === 'rd' ? integration.code = user.code : ''
+            //               user.origin === 'rd' ? integration.redirectValue = 1 : '';
+
+            //               const integrationBoteria = {
+            //                 name: 'boteria',
+            //                 userIdBoteria: createUserBoteria.userId,
+            //                 dashboardToken: createUserBoteria.dashboardToken,
+            //                 companyId: createUserBoteria.companyId,
+            //                 organizationId: createUserBoteria.organizationId,
+            //               }
+
+            //               integrationArray.push(integration, integrationBoteria);
+            //             } else {
+            //               const integrationBoteria = {
+            //                 name: 'boteria',
+            //                 userIdBoteria: user.userId,
+            //                 dashboardToken: user.dashboardToken,
+            //                 companyId: user.companyId,
+            //                 organizationId: user.organizationId
+            //               }
+
+            //               integrationArray.push(integrationBoteria);
+            //             }
+
+            //             const userSave = {
+            //                 name: user.name,
+            //                 email: user.email,
+            //                 phone: user.phone,
+            //                 companyName: user.companyName,
+            //                 password: hash,
+            //                 botPublish: botPublished,
+            //                 originInitial: user.origin === undefined ? 'boteria' : user.origin,
+            //                 integrations: integrationArray
+            //             };
+
+      //     createUserService(userSave);
+
+      //     return response.status(200).send({
+      //       'result': 'success',
+      //       'message': 'Usuário cadastrado com sucesso',
+      //       'user': userSave,
+      //       'token': loginUserBoteria.tokenBoteria
+      //     });
+      //   }
+      //   return response.status(200).send({
+      //     'result': 'error',
+      //     'message': 'Usuário já existente, insira outro email',
+      //     'user': userEmail
+      //   });
+      // } else {
+      //   return response.status(200).send({
+      //     'result': 'error',
+      //     'message': 'Erro ao tentar localizar seu usário, tente novamente',
+      //   });
+      // }
     } catch (error) {
       return response.json(error);
     }

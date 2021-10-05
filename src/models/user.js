@@ -11,6 +11,9 @@ const UserSchema = new Schema({
   botPublish: String,
   originInitial: String,
   integrations: [],
+  boteria: {},
+  userIdStore: String,
+  accessToken: String,
 }, {
   timestamps: true
 });

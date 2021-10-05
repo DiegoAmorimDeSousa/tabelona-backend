@@ -7,6 +7,7 @@ import boteriaLoginUserController from '../../../app/controllers/user/BoteriaLog
 import recoverPasswordBoteriaUserController from '../../../app/controllers/user/RecoverPasswordBoteriaUserController';
 import userDataController from '../../../app/controllers/user/userDataController';
 import updateOrgUserController from '../../../app/controllers/user/UpdateOrgUserBoteriaController';
+import updateValueRDController from '../../../app/controllers/user/UpdateValueRedirectRDController';
 
 const userRouter = Router();
 
@@ -17,5 +18,6 @@ userRouter.post('/boteria/login', boteriaLoginUserController.login);
 userRouter.post('/boteria/recover-password', recoverPasswordBoteriaUserController.recoverPassword);
 userRouter.get('/', userDataController.getUser);
 userRouter.post('/update-org', updateOrgUserController.updateOrg);
+userRouter.post('/update-value-rd', updateValueRDController.updateValueRD);
 
 export default userRouter;

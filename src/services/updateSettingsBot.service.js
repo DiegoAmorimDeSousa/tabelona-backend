@@ -1,7 +1,20 @@
 import axios from 'axios';
-import { list_bot } from '../utils/config';
+import logger from '../utils/logger';
+import { list_bot, api_boteria, key_boteria } from '../utils/config';
 
-async function updateSettingsBotService(settings, botid, token) {
+async function updateSettingsBotService(settings, botid, token, userData) {
+
+  let userId = '';
+
+  if(userData.boteria === undefined) {
+    userData.integrations.map(element => {
+      if(element.name === 'boteria'){
+        userId = element.userIdBoteria;
+      }
+    })
+  } else {
+    userId = userData.boteria.userIdBoteria
+  }
 
   axios.put(`${list_bot}/update/${botid}`, {
     channels: settings.channels,
@@ -12,7 +25,22 @@ async function updateSettingsBotService(settings, botid, token) {
         'Authorization': 'Bearer' + ' ' + token,
       }
     }
-  );
+  ).then(() => {
+
+    logger.info('Updated settings bot');
+
+    axios.post(`${api_boteria}/bots/${botid}/publish?key=${key_boteria}`, {
+      isActive: true,
+      isWebchatChannelActive: true,
+      userId: userId
+    }).then(() => {
+      logger.info('Bot published successfully');
+    }).catch(() => {
+      logger.error('Bot published error');
+    })
+
+
+  }).catch(() => logger.error('Error updated settings bot'));
 }
 
 export default updateSettingsBotService;

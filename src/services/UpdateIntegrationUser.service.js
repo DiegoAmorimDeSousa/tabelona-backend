@@ -1,5 +1,6 @@
 import logger from '../utils/logger';
 import User from '../models/user';
+import copyTemplateBotService from './copyTemplateBot.service';
 
 async function updateIntegrationUser(email, origin, accessToken, code, userIdStore, refreshToken_rd, response) {
 
@@ -16,15 +17,25 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
   let count = 0;
   let integrationExisting = false;
 
+  const objCopyTemplate = {};
+
   response.integrations.map(async (element) => {
     if(element.name === origin){
       integrationExisting = true
     }
+
+    if(element.name === 'boteria'){
+      objCopyTemplate.companyId = element.companyId;
+      objCopyTemplate.organizationId = element.organizationId;
+      objCopyTemplate.userId = element.userIdBoteria;
+      objCopyTemplate.companyName = response.companyName;
+      objCopyTemplate.origin = origin;
+    }
   });
 
   response.integrations.map(async (element) => {
-    if(element.name === origin){
 
+    if(element.name === origin){
       if(count === 0){
         count = count + 1;
         if(origin === 'rd'){
@@ -52,7 +63,23 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
     } else {
       if(!integrationExisting){
         if(count === 0){
+
           count = count + 1;
+
+          let copyTemplate = '';
+
+          copyTemplate = await copyTemplateBotService(objCopyTemplate);
+
+          let botPublished;
+
+          if (copyTemplate === '' || copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
+              botPublished = 1
+          } else {
+              botPublished = copyTemplate._id;
+          }
+
+          updateIntegrations.templateBotId = 'copyTemplate';
+
           await User.updateOne({email: email}, {
             $push: {integrations: updateIntegrations}
           }).then(() => {logger.info('User updated')})

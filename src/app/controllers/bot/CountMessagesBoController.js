@@ -12,7 +12,7 @@ class CountMessagesBotController {
       let companyId = '';
       let dashboardToken = '';
 
-      if(userEmail[0].boteria === undefined || userEmail[0].boteria.companyId === undefined) {
+      if(userEmail[0].boteria === undefined) {
         userEmail[0].integrations.forEach(element => {
           if(element.name === 'boteria'){
             companyId = element.companyId;
