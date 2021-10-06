@@ -25,3 +25,7 @@ export const api_boteria_copy_template = process.env.API_BOTERIA_COPY_TEMPLATE;
 export const template_id_nuvemshop = process.env.ID_TEMPLATE_NUVEMSHOP;
 export const template_id_rd = process.env.ID_TEMPLATE_RD;
 export const key_boteria = process.env.KEY_BOTERIA;
+export const url_rd_auth = process.env.URL_RD_AUTH;
+export const client_id_rd = process.env.CLIENT_ID_RD;
+export const client_secret_rd = process.env.CLIENT_SECRET_RD;
+
