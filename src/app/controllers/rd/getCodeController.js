@@ -6,8 +6,6 @@ class getCodeController {
 
         const { code } = request.query;
 
-        console.log(url_rd_auth, client_id_rd, client_secret_rd, url_front);
-
         axios.post(url_rd_auth, {
             "client_id": client_id_rd,
             "client_secret": client_secret_rd,
