@@ -72,7 +72,7 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
 
           let copyTemplate = '';
 
-          copyTemplate = await copyTemplateBotService(objCopyTemplate);
+          copyTemplate = await copyTemplateBotService(objCopyTemplate, code);
 
           let botPublished;
 
@@ -97,7 +97,7 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
 
     let copyTemplate = '';
 
-    copyTemplate = await copyTemplateBotService(objCopyTemplate);
+    copyTemplate = await copyTemplateBotService(objCopyTemplate, code);
 
     let botPublished;
 
