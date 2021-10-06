@@ -28,7 +28,11 @@ class CreateUserController {
                     phone: user.phone,
                     companyName: user.companyName,
                     password: user.password,
-                    source: 'LP_nuvemshop'
+                    source: 'LP_nuvemshop',
+                    registerFrom: {
+                        type: 'PARTNERS',
+                        _id: '615de9dc9f519a4fd2d4d568'
+                    }
                 };
 
                 createUserBoteria = await boteriaService(userBoteria, user.tokenReCaptcha);
