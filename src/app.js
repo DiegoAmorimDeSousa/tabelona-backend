@@ -64,8 +64,6 @@ class App {
 
       const urlSplice = url.split('/');
 
-      console.log(urlSplice);
-
       let boteriaUrlExistent = false;
       let partnerStore = false;
 
