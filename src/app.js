@@ -64,6 +64,8 @@ class App {
 
       const urlSplice = url.split('/');
 
+      console.log(urlSplice);
+
       let boteriaUrlExistent = false;
       let partnerStore = false;
 
@@ -87,6 +89,8 @@ class App {
       } else if (boteriaUrlExistent) {
         next();
       } else if (partnerStore) {
+        next();
+      } else if (urlSplice[2] === 'rd') {
         next();
       } else {
         if (storeCode) {

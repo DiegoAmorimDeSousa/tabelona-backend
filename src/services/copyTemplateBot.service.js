@@ -2,7 +2,7 @@ import { api_boteria_copy_template, template_id_nuvemshop, template_id_rd, api_b
 import logger from '../utils/logger';
 import axios from 'axios';
 
-async function copyTemplateBotService(objCopyTemplate) {
+async function copyTemplateBotService(objCopyTemplate, code) {
 
   const copyTemplate = await axios.post(api_boteria_copy_template, {
     "templateBotId": objCopyTemplate.origin === 'nuvemshop' ? template_id_nuvemshop : template_id_rd,
@@ -18,6 +18,12 @@ async function copyTemplateBotService(objCopyTemplate) {
       isWebchatChannelActive: true,
       userId: objCopyTemplate.userId
     })
+
+    if (objCopyTemplate.origin === 'rd') {
+      axios.post(`${api_boteria}/${response.data._id}/rd-station/auth`, {
+        "code": code
+      })
+    }
 
     logger.info(`Copy bot success`);
 

@@ -13,14 +13,14 @@ async function loginService(email, password, tokenReCaptcha, origin, accessToken
       if (response) {
         if (bcrypt.compareSync(password.toString(), response.password.toString())) {
 
-          if(response.originInitial === 'boteria'){
-            await User.updateOne({email: email}, {
+          if (response.originInitial === 'boteria') {
+            await User.updateOne({ email: email }, {
               originInitial: origin
-            }).then(() => {logger.info('Origin Initial updated')})
-            .catch(err => {logger.error(err)});
+            }).then(() => { logger.info('Origin Initial updated') })
+              .catch(err => { logger.error(err) });
           }
 
-          if(accessToken.length > 0){
+          if (accessToken.length > 0) {
 
             await updateIntegrationUser(email, origin, accessToken, code, userIdStore, refreshToken_rd, response);
 
@@ -41,7 +41,7 @@ async function loginService(email, password, tokenReCaptcha, origin, accessToken
               obj.token = createToken({ id: response._id }),
               obj.response = response
 
-              logger.info(`Login user success`);
+            logger.info(`Login user success`);
           }
         } else {
           obj.status = 422

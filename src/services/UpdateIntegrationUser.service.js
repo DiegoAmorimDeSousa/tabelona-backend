@@ -20,11 +20,11 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
   const objCopyTemplate = {};
 
   response.integrations.map(async (element) => {
-    if(element.name === origin){
+    if (element.name === origin) {
       integrationExisting = true
     }
 
-    if(element.name === 'boteria'){
+    if (element.name === 'boteria') {
       objCopyTemplate.companyId = element.companyId;
       objCopyTemplate.organizationId = element.organizationId;
       objCopyTemplate.userId = element.userIdBoteria;
@@ -35,34 +35,38 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
 
   response.integrations.map(async (element) => {
 
-    if(element.name === origin){
-      if(count === 0){
+    if (element.name === origin) {
+      if (count === 0) {
         count = count + 1;
-        if(origin === 'rd'){
+        if (origin === 'rd') {
           await User.updateOne({ email: email, "integrations.name": origin },
-          { $set: {
-            "integrations.$.code" : code,
-            "integrations.$.accessToken": accessToken,
-            "integrations.$.refreshToken": refreshToken_rd,
-          } }
+            {
+              $set: {
+                "integrations.$.code": code,
+                "integrations.$.accessToken": accessToken,
+                "integrations.$.refreshToken": refreshToken_rd,
+              }
+            }
           )
-          .then(() => {logger.info('Updated integration user')})
-          .catch(() => {logger.error('Error updating integration user')});
-        } else if(origin === 'nuvemshop'){
+            .then(() => { logger.info('Updated integration user') })
+            .catch(() => { logger.error('Error updating integration user') });
+        } else if (origin === 'nuvemshop') {
           await User.updateOne({ email: email, "integrations.name": origin },
-          { $set: {
-            "integrations.$.userIdStore" : userIdStore,
-            "integrations.$.accessToken": accessToken,
-          } }
+            {
+              $set: {
+                "integrations.$.userIdStore": userIdStore,
+                "integrations.$.accessToken": accessToken,
+              }
+            }
           )
-          .then(() => {logger.info('Updated integration user')})
-          .catch(() => {logger.error('Error updating integration user')});
+            .then(() => { logger.info('Updated integration user') })
+            .catch(() => { logger.error('Error updating integration user') });
         }
       }
 
     } else {
-      if(!integrationExisting){
-        if(count === 0){
+      if (!integrationExisting) {
+        if (count === 0) {
 
           count = count + 1;
 
@@ -73,21 +77,43 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
           let botPublished;
 
           if (copyTemplate === '' || copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
-              botPublished = 1
+            botPublished = 1
           } else {
-              botPublished = copyTemplate._id;
+            botPublished = copyTemplate._id;
           }
 
           updateIntegrations.templateBotId = 'copyTemplate';
 
-          await User.updateOne({email: email}, {
-            $push: {integrations: updateIntegrations}
-          }).then(() => {logger.info('User updated')})
-          .catch(err => {logger.error(err)});
+          await User.updateOne({ email: email }, {
+            $push: { integrations: updateIntegrations }
+          }).then(() => { logger.info('User updated') })
+            .catch(err => { logger.error(err) });
         }
       }
     }
   })
+
+  if (response.integrations.length === 0) {
+
+    let copyTemplate = '';
+
+    copyTemplate = await copyTemplateBotService(objCopyTemplate);
+
+    let botPublished;
+
+    if (copyTemplate === '' || copyTemplate._id === null || copyTemplate._id === 'null' || copyTemplate._id === '' || copyTemplate === undefined) {
+      botPublished = 1
+    } else {
+      botPublished = copyTemplate._id;
+    }
+
+    updateIntegrations.templateBotId = 'copyTemplate';
+
+    await User.updateOne({ email: email }, {
+      $push: { integrations: updateIntegrations }
+    }).then(() => { logger.info('User updated') })
+      .catch(err => { logger.error(err) })
+  }
 
   return;
 }

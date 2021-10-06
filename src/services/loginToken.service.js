@@ -17,7 +17,7 @@ async function loginTokenService(email, password, tokenBoteria, res) {
             obj.token = createToken({ id: response._id }),
             obj.response = response
 
-            logger.info(`Login user success`);
+          logger.info(`Login user success`);
 
         } else {
           obj.status = 422
