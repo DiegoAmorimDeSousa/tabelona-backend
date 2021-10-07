@@ -7,7 +7,7 @@ class UpdateOrgUserBoteriaController {
 
         let organizationId;
 
-        if (userData !== undefined || code !== undefined) {
+        if (userData !== undefined) {
             if (userData.boteria === undefined) {
                 userData.integrations.map(element => {
                     if (element.name === 'boteria') {
