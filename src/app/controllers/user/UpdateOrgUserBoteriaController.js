@@ -7,14 +7,16 @@ class UpdateOrgUserBoteriaController {
 
         let organizationId;
 
-        if (userData.boteria === undefined) {
-            userData.integrations.map(element => {
-                if (element.name === 'boteria') {
-                    organizationId = element.organizationId;
-                };
-            })
-        } else {
-            organizationId = userData.boteria.organizationId;
+        if (userData !== undefined || code !== undefined) {
+            if (userData.boteria === undefined) {
+                userData.integrations.map(element => {
+                    if (element.name === 'boteria') {
+                        organizationId = element.organizationId;
+                    };
+                })
+            } else {
+                organizationId = userData.boteria.organizationId;
+            }
         }
 
         const updateOrgService = await UpdateOrgUser(code, organizationId, token);
