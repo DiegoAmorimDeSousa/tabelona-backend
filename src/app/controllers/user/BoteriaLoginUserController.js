@@ -32,7 +32,7 @@ class BoteriaLoginUserController {
             userId: loginUserBoteria.userId
           }
 
-          const copyTemplate = await copyTemplateBotService(objCopyTemplate);
+          const copyTemplate = await copyTemplateBotService(objCopyTemplate, user.code);
 
           let botPublished;
 

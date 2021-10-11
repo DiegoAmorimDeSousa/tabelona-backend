@@ -31,7 +31,7 @@ class CreateUserController {
                     source: 'LP_nuvemshop',
                     registerFrom: {
                         type: 'PARTNERS',
-                        _id: '615de9dc9f519a4fd2d4d568'
+                        _id: process.env.REGISTER_FROM_ID
                     }
                 };
 

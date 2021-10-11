@@ -20,7 +20,7 @@ async function copyTemplateBotService(objCopyTemplate, code) {
     })
 
     if (objCopyTemplate.origin === 'rd') {
-      axios.post(`${api_boteria}/${response.data._id}/rd-station/auth`, {
+      axios.post(`${api_boteria}/bots/${response.data._id}/rd-station/auth?key=${key_boteria}`, {
         "code": code
       })
     }
