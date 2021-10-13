@@ -15,27 +15,36 @@ async function loginBoteria(email, password, tokenReCaptcha) {
   const loginUser = {};
 
   let organizationId;
+  let companyId;
 
   await axios.post(`${api_boteria}/auth/sign-in`, user)
     .then(result => {
 
+      if (result.data.user.selectedCompany !== null) {
+        companyId = result.data.user.selectedCompany._id;
+      } else {
+        companyId = result.data.user.companyId;
+      }
+
       let dateCreationUser = result.data.user.dateCreation.split('T');
 
-      if (result.data.user.selectedOrganization !== undefined) {
+      if (result.data.user.selectedOrganization !== null) {
         organizationId = result.data.user.selectedOrganization;
       } else {
+
         result.data.user.organizations.map(element => {
 
           let dateCreationOrg = element.dateCreation.split('T');
 
           if (dateCreationUser[0] === dateCreationOrg[0]) {
-            let dateCreationUserTime = dateCreationUser[1].split('.');
-            let dateCreationOrgTime = dateCreationOrg[1].split('.');
+            let minuteCreationUser = dateCreationUser[1].split(':');
+            let minuteCreationOrg = dateCreationOrg[1].split(':');
 
-            if (dateCreationOrgTime[0] === dateCreationUserTime[0]) {
-              if (organizationId === undefined) {
-                organizationId = element._id;
-              }
+            if (minuteCreationUser[0] === minuteCreationOrg[0]) {
+              if (minuteCreationUser[1] === minuteCreationOrg[1])
+                if (organizationId === undefined) {
+                  organizationId = element._id;
+                }
             }
           }
         })
@@ -43,7 +52,7 @@ async function loginBoteria(email, password, tokenReCaptcha) {
 
       loginUser.status = 200;
       loginUser.dashboardToken = result.data.user.dashboard_token;
-      loginUser.companyId = result.data.user.selectedCompany._id;
+      loginUser.companyId = companyId;
       loginUser.userId = result.data.user._id;
       loginUser.organizationId = organizationId;
       loginUser.tokenBoteria = result.data.token;

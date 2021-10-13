@@ -1,5 +1,3 @@
-import axios from 'axios';
-import userSchema from '../../../models/user';
 import listBotService from '../../../services/listBot.service';
 
 class ListBotController {
