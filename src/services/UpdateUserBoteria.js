@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { api_boteria } from '../utils/config';
 
-async function updateOrgUserBoteria(code, organizationId, token) {
+async function updateUserBoteria(code, userId, token) {
 
-    const updateOrg = await axios.put(`${api_boteria}/companies/organization/${organizationId}`, {
+    const updateOrg = await axios.put(`${api_boteria}/users/${userId}`, {
         rdOAuthCode: code,
-        _id: organizationId
     }, {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -13,10 +12,10 @@ async function updateOrgUserBoteria(code, organizationId, token) {
     }).then((response) => {
         return response.data
     }).catch(() => {
-        return 'error update org'
+        return 'error update user'
     });
 
     return updateOrg;
 }
 
-export default updateOrgUserBoteria;
+export default updateUserBoteria;

@@ -17,7 +17,7 @@ userRouter.post('/auth', authUserController.auth);
 userRouter.post('/boteria/login', boteriaLoginUserController.login);
 userRouter.post('/boteria/recover-password', recoverPasswordBoteriaUserController.recoverPassword);
 userRouter.get('/', userDataController.getUser);
-userRouter.post('/update-org', updateOrgUserController.updateOrg);
+userRouter.post('/update-code', updateOrgUserController.updateOrg);
 userRouter.post('/update-value-rd', updateValueRDController.updateValueRD);
 
 export default userRouter;

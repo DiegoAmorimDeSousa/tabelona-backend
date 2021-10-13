@@ -5,21 +5,21 @@ class UpdateOrgUserBoteriaController {
 
         const { userData, code, token } = request.body;
 
-        let organizationId;
+        let userId;
 
         if (userData !== undefined) {
             if (userData.boteria === undefined) {
                 userData.integrations.map(element => {
                     if (element.name === 'boteria') {
-                        organizationId = element.organizationId;
+                        userId = element.userIdBoteria;
                     };
                 })
             } else {
-                organizationId = userData.boteria.organizationId;
+                userId = userData.boteria.userIdBoteria;
             }
         }
 
-        const updateOrgService = await UpdateOrgUser(code, organizationId, token);
+        const updateOrgService = await UpdateOrgUser(code, userId, token);
 
         return response.status(200).json(updateOrgService);
     }
