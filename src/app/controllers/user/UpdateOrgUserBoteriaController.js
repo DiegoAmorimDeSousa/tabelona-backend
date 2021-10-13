@@ -1,4 +1,4 @@
-import UpdateOrgUser from '../../../services/UpdateOrgUserBoteria.service';
+import UpdateOrgUser from '../../../services/UpdateUserBoteria';
 
 class UpdateOrgUserBoteriaController {
     async updateOrg(request, response) {
