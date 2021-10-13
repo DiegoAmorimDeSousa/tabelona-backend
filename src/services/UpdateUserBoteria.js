@@ -5,6 +5,7 @@ async function updateUserBoteria(code, userId, token) {
 
     const updateOrg = await axios.put(`${api_boteria}/users/${userId}`, {
         rdOAuthCode: code,
+        _id: userId
     }, {
         headers: {
             'Authorization': `Bearer ${token}`
