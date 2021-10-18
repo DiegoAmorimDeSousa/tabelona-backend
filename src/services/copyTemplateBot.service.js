@@ -4,14 +4,19 @@ import axios from 'axios';
 
 async function copyTemplateBotService(objCopyTemplate, code) {
 
-  const copyTemplate = await axios.post(api_boteria_copy_template, {
+  const body = {
     "templateBotId": objCopyTemplate.origin === 'nuvemshop' ? template_id_nuvemshop : template_id_rd,
     "organizationId": objCopyTemplate.organizationId,
     "companyId": objCopyTemplate.companyId,
-    "customValues": {
+  }
+
+  if(objCopyTemplate.origin === 'nuvemshop'){
+    body.customValues = {
       "nomeEmpresa": objCopyTemplate.companyName
     }
-  }).then(response => {
+  }
+
+  const copyTemplate = await axios.post(api_boteria_copy_template, body).then(response => {
 
     axios.post(`${api_boteria}/bots/${response.data._id}/publish?key=${key_boteria}`, {
       isActive: true,
