@@ -4,6 +4,11 @@ FROM node:12.18.4-alpine
 RUN mkdir -p /app
 WORKDIR /app
 
+RUN apk --no-cache --virtual build-dependencies add \
+    python \
+    make \
+    g++ \
+
 # Install app dependencies
 COPY package.json /app
 RUN npm install
