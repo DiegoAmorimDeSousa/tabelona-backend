@@ -14,6 +14,10 @@ async function copyTemplateBotService(objCopyTemplate, code) {
     body.customValues = {
       "nomeEmpresa": objCopyTemplate.companyName
     }
+  } else if(objCopyTemplate.origin === 'rd'){
+    body.customValues = {
+      placeholder: ''
+    }
   }
 
   const copyTemplate = await axios.post(api_boteria_copy_template, body).then(response => {
