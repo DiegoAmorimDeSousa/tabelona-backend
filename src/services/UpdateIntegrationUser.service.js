@@ -82,7 +82,7 @@ async function updateIntegrationUser(email, origin, accessToken, code, userIdSto
             botPublished = copyTemplate._id;
           }
 
-          updateIntegrations.templateBotId = 'copyTemplate';
+          updateIntegrations.templateBotId = botPublished;
 
           await User.updateOne({ email: email }, {
             $push: { integrations: updateIntegrations }
