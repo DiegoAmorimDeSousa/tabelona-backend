@@ -128,12 +128,15 @@ class CreateUserController {
             user.origin === 'rd' ? (integration.code = user.code) : '';
             user.origin === 'rd' ? (integration.redirectValue = 1) : '';
 
+            integration.creationDate = new Date();
+
             const integrationBoteria = {
               name: 'boteria',
               userIdBoteria: createUserBoteria.userId,
               dashboardToken: createUserBoteria.dashboardToken,
               companyId: createUserBoteria.companyId,
               organizationId: createUserBoteria.organizationId,
+              creationDate: new Date()
             };
 
             integrationArray.push(integration, integrationBoteria);
@@ -144,6 +147,7 @@ class CreateUserController {
               dashboardToken: user.dashboardToken,
               companyId: user.companyId,
               organizationId: user.organizationId,
+              creationDate: new Date()
             };
 
             integrationArray.push(integrationBoteria);
