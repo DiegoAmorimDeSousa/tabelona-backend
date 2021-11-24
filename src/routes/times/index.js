@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import times from './times/index';
+import timesRouter from './time/times.routes';
 
 const routes = Router();
 
-routes.use('/api', times);
+routes.use('/times', timesRouter);
 
 export default routes;
