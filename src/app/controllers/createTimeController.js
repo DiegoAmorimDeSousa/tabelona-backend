@@ -16,12 +16,12 @@ class createTimeController {
                 surname: time.surname,
                 switching: [],
                 lastPosition: 4,
-                classification: [{
+                classification: {
                     pontuation: 124,
                     games: 74,
                     wins: 55,
                     year: 2021
-                }]
+                }
             }
 
             await createTimeService(timeSave);
