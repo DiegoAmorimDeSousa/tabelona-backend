@@ -4,7 +4,15 @@ class getTimesController {
     async getTimes(request, response){
 
         try {
-            const times = await timeSchema.find();
+            const times = await timeSchema.find({
+                'country': 'Brasil',
+                'seriesType': 'A'
+            }).sort({
+                'pontuation': -1,
+                'games': 1,
+                'wins': -1,
+                'name': -1
+            })
 
             return response.status(200).json({
                 success: true,
