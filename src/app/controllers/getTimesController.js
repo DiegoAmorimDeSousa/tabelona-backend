@@ -5,12 +5,11 @@ class getTimesController {
 
         try {
             const times = await timeSchema.find({
-                'country': 'Brasil',
-                'seriesType': 'A'
+                'classification.year': 2021
             }).sort({
-                'pontuation': -1,
-                'games': 1,
-                'wins': -1,
+                'classification.pontuation': -1,
+                'classification.games': 1,
+                'classification.wins': -1,
                 'name': -1
             })
 

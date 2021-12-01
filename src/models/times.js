@@ -13,7 +13,7 @@ const UserSchema = new Schema({
   surname: String,
   switching: [],
   lastPosition: String,
-  classification: {}
+  classification: []
 }, {
   timestamps: true
 });
