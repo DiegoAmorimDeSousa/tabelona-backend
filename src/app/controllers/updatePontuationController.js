@@ -3,7 +3,7 @@ import timeSchema from '../../models/times';
 class updatePontuationController {
     async updatePontuationController(request, response){
 
-        const { name, result } = request.body;
+        const { name, result, pontuation, games } = request.body;
 
         try {
 
@@ -28,14 +28,28 @@ class updatePontuationController {
 
                 const classificationArray = timesClassification[0].classification;
 
+                let updateOn = false;
+
                 classificationArray.map(element => {
                     if(element.year === date.getFullYear()){
+
+                        if(result !== 'D'){
+                            if(element.pontuation === pontuation){
+                                updateOn = true;
+                            }
+                        } else {
+                            if(element.games === games){
+                                updateOn = true;
+                            }
+                        }
+
                         arrayFinaly.push({
                             pontuation: element.pontuation + point,
                             games: element.games + 1,
                             wins: element.wins + win,
                             year: date.getFullYear()
                         });
+
                     } else {
                         arrayFinaly.push({
                             pontuation: element.pontuation,
@@ -46,25 +60,43 @@ class updatePontuationController {
                     }
                 });
 
-                timeSchema.findOneAndUpdate({ name: name },
-                    { classification: arrayFinaly }, { new: true })
-                    .then(resu => console.log(resu))
-                    .catch(err => console.log(err))
-
-                const times = await timeSchema.find({
-                    'classification.year': 2021
-                }).sort({
-                    'classification.pontuation': -1,
-                    'classification.games': 1,
-                    'classification.wins': -1,
-                    'name': -1
-                })
+                if(updateOn){
+                    timeSchema.findOneAndUpdate({ name: name },
+                        { classification: arrayFinaly }, { new: true })
+                        .then(resu => console.log(resu))
+                        .catch(err => console.log(err))
     
-                return response.status(200).json({
-                    success: true,
-                    message: 'Times selecionados com sucesso',
-                    times
-                });
+                    const times = await timeSchema.find({
+                        'classification.year': 2021
+                    }).sort({
+                        'classification.pontuation': -1,
+                        'classification.games': 1,
+                        'classification.wins': -1,
+                        'name': -1
+                    })
+
+                    return response.status(200).json({
+                        success: true,
+                        message: 'Times selecionados com sucesso',
+                        times
+                    });
+                } else {
+                    const times = await timeSchema.find({
+                        'classification.year': 2021
+                    }).sort({
+                        'classification.pontuation': -1,
+                        'classification.games': 1,
+                        'classification.wins': -1,
+                        'name': -1
+                    })
+        
+                    return response.status(200).json({
+                        success: true,
+                        message: 'Times selecionados com sucesso',
+                        times
+                    });
+                }
+                
             } else {
                 const times = await timeSchema.find({
                     'classification.year': 2021
