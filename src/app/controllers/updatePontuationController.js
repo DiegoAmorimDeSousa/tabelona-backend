@@ -3,7 +3,7 @@ import timeSchema from '../../models/times';
 class updatePontuationController {
     async updatePontuationController(request, response){
 
-        const { name, result, pontuation, games } = request.body;
+        const { name, result, pontuation, games, position } = request.body;
 
         try {
 
@@ -62,7 +62,7 @@ class updatePontuationController {
 
                 if(updateOn){
                     timeSchema.findOneAndUpdate({ name: name },
-                        { classification: arrayFinaly }, { new: true })
+                        { classification: arrayFinaly, lastPosition: position }, { new: true })
                         .then(resu => console.log(resu))
                         .catch(err => console.log(err))
     
