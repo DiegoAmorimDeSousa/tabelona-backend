@@ -7,7 +7,7 @@ import updatePontuationController from '../../../app/controllers/updatePontuatio
 const botRouter = Router();
 
 botRouter.post('/create', createTimeController.createTime);
-botRouter.get('/', getTimesController.getTimes);
+botRouter.get('/:year', getTimesController.getTimes);
 botRouter.put('/update-pontuation', updatePontuationController.updatePontuationController);
 
 export default botRouter;

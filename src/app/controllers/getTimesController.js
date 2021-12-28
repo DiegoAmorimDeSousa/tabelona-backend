@@ -4,8 +4,11 @@ class getTimesController {
     async getTimes(request, response){
 
         try {
+
+            const { year } = request.params;
+
             const times = await timeSchema.find({
-                'classification.year': 2021
+                'classification.year': Number(year)
             }).sort({
                 'classification.pontuation': -1,
                 'classification.games': 1,
