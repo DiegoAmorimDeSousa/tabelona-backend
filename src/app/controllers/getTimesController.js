@@ -7,14 +7,24 @@ class getTimesController {
 
             const { year } = request.params;
 
-            const times = await timeSchema.find({
-                'classification.year': Number(year)
-            }).sort({
-                'classification.pontuation': -1,
-                'classification.games': 1,
-                'classification.wins': -1,
-                'name': -1
-            })
+            let times = '';
+            
+            if(year === 'undefined'){
+                times = await timeSchema.find({
+                    'classification.year': Number(new Date().getFullYear())
+                }).sort({
+                    'titles.year': -1,
+                })
+            } else {
+                times = await timeSchema.find({
+                    'classification.year': Number(year)
+                }).sort({
+                    'classification.pontuation': -1,
+                    'classification.games': 1,
+                    'classification.wins': -1,
+                    'name': -1
+                })
+            }
 
             return response.status(200).json({
                 success: true,
