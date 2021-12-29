@@ -1,7 +1,7 @@
 import insertTitleTimeService from '../../services/insertTitleTime.service';
 import chaveamentosService from '../../services/chaveamentos.service';
-import updateSerieAndPontuationTimeService from '../../services/updateSerieAndPontuationTime.service';
 import Time from '../../models/times';
+import logger from '../../utils/logger';
 
 class RefreshClassificationController {
     async refreshClassification(request, response) {
@@ -40,6 +40,8 @@ class RefreshClassificationController {
                         newSeriesTypeBrasilA = 'B'
                     } 
 
+                    copaDoBrasilArray.push(element.name);
+
                     await Time.findOneAndUpdate({ name: element.name },
                         { $push: { classification: {
                            pontuation: 0,
@@ -50,10 +52,8 @@ class RefreshClassificationController {
                           seriesType: newSeriesTypeBrasilA
                         }, 
                    { new: true })
-                       .then(resu => console.log(resu))
-                       .catch(err => console.log(err))
-
-                    copaDoBrasilArray.push(element.name);
+                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
+                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
                 }
 
                 if(element.seriesType === 'B' && element.country === 'Brasil'){
@@ -86,8 +86,8 @@ class RefreshClassificationController {
                           seriesType: newSeriesTypeBrasilB
                         }, 
                    { new: true })
-                       .then(resu => console.log(resu))
-                       .catch(err => console.log(err))
+                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
+                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
                 }
 
                 if(element.seriesType === 'A' && element.country === 'World'){
@@ -112,6 +112,8 @@ class RefreshClassificationController {
                         newSeriesTypeMundoA = 'B';
                     }
 
+                    copaMundialArray.push(element.name);
+
                     await Time.findOneAndUpdate({ name: element.name },
                         { $push: { classification: {
                            pontuation: 0,
@@ -122,10 +124,8 @@ class RefreshClassificationController {
                           seriesType: newSeriesTypeMundoA
                         }, 
                    { new: true })
-                       .then(resu => console.log(resu))
-                       .catch(err => console.log(err))
-
-                    copaMundialArray.push(element.name);
+                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
+                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
 
                 }
 
@@ -159,8 +159,8 @@ class RefreshClassificationController {
                           seriesType: newSeriesTypeMundoB
                         }, 
                    { new: true })
-                       .then(resu => console.log(resu))
-                       .catch(err => console.log(err))
+                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
+                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
                 }
             });
 

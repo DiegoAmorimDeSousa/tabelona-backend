@@ -14,16 +14,14 @@ class getTimesController {
                     'classification.year': Number(new Date().getFullYear())
                 }).sort({
                     'titles.year': -1,
-                })
+                });
             } else {
-                times = await timeSchema.find({
-                    'classification.year': Number(year)
-                }).sort({
+                times = await timeSchema.find().sort({
                     'classification.pontuation': -1,
                     'classification.games': 1,
                     'classification.wins': -1,
                     'name': -1
-                })
+                });
             }
 
             return response.status(200).json({
