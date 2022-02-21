@@ -21,7 +21,7 @@ class createTimeController {
                     games: Number(time.jogos),
                     wins: Number(time.vitorias),
                     year: 2021
-                }]
+                }],
             }
 
             return response.status(200).json({
