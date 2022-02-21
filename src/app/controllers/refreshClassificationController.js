@@ -1,5 +1,6 @@
 import insertTitleTimeService from '../../services/insertTitleTime.service';
 import chaveamentosService from '../../services/chaveamentos.service';
+import configTableService from '../../services/configTable.service';
 import Time from '../../models/times';
 import logger from '../../utils/logger';
 
@@ -18,13 +19,11 @@ class RefreshClassificationController {
             let libertadoresArray = [];
             let championsArray = [];
 
-            times.map(async (element) => {
+            const timesArray = await configTableService(times);
+
+            timesArray.map(async (element) => {
                 if(element.seriesType === 'A' && element.country === 'Brasil'){
                     positonBrasilA = positonBrasilA + 1;
-                    
-                    if(positonBrasilA === 1){
-                        // await insertTitleTimeService(element.name, 'Série A - Brasil', new Date().getFullYear());
-                    }
 
                     if(positonBrasilA < 7){
                         championsArray.push(element.name);
@@ -34,69 +33,101 @@ class RefreshClassificationController {
                         libertadoresArray.push(element.name);
                     }
 
-                    let newSeriesTypeBrasilA = 'A';
-
-                    if(positonBrasilA > 24){
-                        newSeriesTypeBrasilA = 'B'
-                    } 
-
-                    copaDoBrasilArray.push(element.name);
-
-                    await Time.findOneAndUpdate({ name: element.name },
+                    if(positonBrasilA < 25){
+                        Time.findOneAndUpdate({ name: element.name },
                         { $push: { classification: {
-                           pontuation: 0,
-                           games: 0,
-                           wins: 0,
-                           year: Number(2022)
-                       }, }, 
-                          seriesType: newSeriesTypeBrasilA
+                            pontuation: 0,
+                            games: 0,
+                            wins: 0,
+                            year: new Date().getFullYear(),
+                            series: 'A'
+                        }, }, 
+                            seriesType: 'A'
                         }, 
-                   { new: true })
-                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
-                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
+                        { new: true })
+                        .then(() => logger.info(`${element.name} Fica na série A`))
+                        .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+
+                        if(positonBrasilA === 1){
+                            await insertTitleTimeService(element.name, 'Série A - Brasil', new Date().getFullYear());
+                        }
+                    } else {
+                        Time.findOneAndUpdate({ name: element.name },
+                            { $push: { classification: {
+                            pontuation: 0,
+                            games: 0,
+                            wins: 0,
+                            year: new Date().getFullYear(),
+                            series: 'B'
+                        }, }, 
+                          seriesType: 'B'
+                        }, 
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Cai para a série B`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+                    }
+                    copaDoBrasilArray.push(element.name);
                 }
 
                 if(element.seriesType === 'B' && element.country === 'Brasil'){
                     positonBrasilB = positonBrasilB + 1;
-                    
-                    if(positonBrasilB === 1){
-                        // await insertTitleTimeService(element.name, 'Série B - Brasil', new Date().getFullYear());
-                    }
 
                     if(positonBrasilB < 3){
                         copaDoBrasilArray.push(element.name);
                     }
 
-                    let newSeriesTypeBrasilB = 'B';
-
                     if(positonBrasilB < 7){
-
-                        newSeriesTypeBrasilB = 'A';
-                    } else if(positonBrasilB > 24){
-                        newSeriesTypeBrasilB = 'Sem série'
-                    }
-
-                    await Time.findOneAndUpdate({ name: element.name },
+                        Time.findOneAndUpdate({ name: element.name },
                         { $push: { classification: {
                            pontuation: 0,
                            games: 0,
                            wins: 0,
-                           year: Number(2022)
+                           year: new Date().getFullYear(),
+                           series: 'A'
                        }, }, 
-                          seriesType: newSeriesTypeBrasilB
+                          seriesType: 'A'
                         }, 
-                   { new: true })
-                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
-                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Sobe para a série A`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+
+                        if(positonBrasilB === 1){
+                            await insertTitleTimeService(element.name, 'Série B - Brasil', new Date().getFullYear());
+                        }
+                    } else if(positonBrasilB > 24) {
+                        Time.findOneAndUpdate({ name: element.name },
+                            { $push: { classification: {
+                            pontuation: 0,
+                            games: 0,
+                            wins: 0,
+                            year: new Date().getFullYear(),
+                            series: 'Sem divisão'
+                        }, }, 
+                          seriesType: 'Sem divisão'
+                        }, 
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Fica sem divisão`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+                    } else {
+                        Time.findOneAndUpdate({ name: element.name },
+                            { $push: { classification: {
+                               pontuation: 0,
+                               games: 0,
+                               wins: 0,
+                               year: new Date().getFullYear(),
+                               series: 'B'
+                           }, }, 
+                              seriesType: 'B'
+                            }, 
+                            { new: true })
+                           .then(() => logger.info(`${element.name} Fica na série B`))
+                           .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+                    }
                 }
 
                 if(element.seriesType === 'A' && element.country === 'World'){
                     positonMundoA = positonMundoA + 1;
                     
-                    if(positonMundoA === 1){
-                        // await insertTitleTimeService(element.name, 'Série A - Mundo', new Date().getFullYear());
-                    }
-
                     if(positonMundoA < 7){
                         championsArray.push(element.name);
                     }
@@ -105,62 +136,97 @@ class RefreshClassificationController {
                         libertadoresArray.push(element.name);
                     }
 
-                    let newSeriesTypeMundoA = 'A';
-
-                    if(positonMundoA > 24){
-
-                        newSeriesTypeMundoA = 'B';
-                    }
-
                     copaMundialArray.push(element.name);
 
-                    await Time.findOneAndUpdate({ name: element.name },
+                    if(positonMundoA < 25){
+                        Time.findOneAndUpdate({ name: element.name },
                         { $push: { classification: {
                            pontuation: 0,
                            games: 0,
                            wins: 0,
-                           year: Number(2022)
+                           year: new Date().getFullYear(),
+                           series: 'A'
                        }, }, 
-                          seriesType: newSeriesTypeMundoA
+                          seriesType: 'A'
                         }, 
-                   { new: true })
-                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
-                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Fica na série A`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
 
+                        if(positonMundoA === 1){
+                            await insertTitleTimeService(element.name, 'Série A - Mundo', new Date().getFullYear());
+                        }
+                    } else {
+                        await Time.findOneAndUpdate({ name: element.name },
+                            { $push: { classification: {
+                            pontuation: 0,
+                            games: 0,
+                            wins: 0,
+                            year: new Date().getFullYear(),
+                            series: 'B'
+                        }, }, 
+                          seriesType: 'B'
+                        }, 
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Cai para a série B`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+                    }
                 }
 
                 if(element.seriesType === 'B' && element.country === 'World'){
                     positonMundoB = positonMundoB + 1;
-                    
-                    if(positonMundoB === 1){
-                        // await insertTitleTimeService(element.name, 'Série B - Mundo', new Date().getFullYear());
-                    }
 
                     if(positonMundoB < 3){
                         copaMundialArray.push(element.name);
                     }
 
-                    let newSeriesTypeMundoB = 'B';
-
                     if(positonMundoB < 7){
-
-                        newSeriesTypeMundoB = 'A';
-                    } else if(positonMundoB > 24){
-                        newSeriesTypeMundoB = 'Sem série';
-                    }
-
-                    await Time.findOneAndUpdate({ name: element.name },
+                        Time.findOneAndUpdate({ name: element.name },
                         { $push: { classification: {
                            pontuation: 0,
                            games: 0,
                            wins: 0,
-                           year: Number(2022)
+                           year: new Date().getFullYear(),
+                           series: 'A'
                        }, }, 
-                          seriesType: newSeriesTypeMundoB
+                          seriesType: 'A'
                         }, 
-                   { new: true })
-                       .then(() => logger.info(`Pontuação do(a) ${element.name} atualizado(a)`))
-                       .catch(() => logger.error(`Erro ao atualizar pontuação do(a) ${element.name}`))
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Sobe para a série A`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+
+                        if(positonMundoB === 1){
+                            await insertTitleTimeService(element.name, 'Série B - Mundo', new Date().getFullYear());
+                        }
+                    } else if(positonMundoB > 24) {
+                        Time.findOneAndUpdate({ name: element.name },
+                            { $push: { classification: {
+                            pontuation: 0,
+                            games: 0,
+                            wins: 0,
+                            year: new Date().getFullYear(),
+                            series: 'Sem divisão'
+                        }, }, 
+                          seriesType: 'Sem divisão'
+                        }, 
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Fica sem divisão`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+                    } else {
+                        Time.findOneAndUpdate({ name: element.name },
+                            { $push: { classification: {
+                            pontuation: 0,
+                            games: 0,
+                            wins: 0,
+                            year: new Date().getFullYear(),
+                            series: 'B'
+                        }, }, 
+                          seriesType: 'B'
+                        }, 
+                        { new: true })
+                       .then(() => logger.info(`${element.name} Fica na série B`))
+                       .catch(() => logger.error(`Erro ao atualizar ${element.name}`))
+                    }
                 }
             });
 
